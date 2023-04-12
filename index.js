@@ -3,9 +3,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 ReactDOM.render(
-  <>
-    <h1>Hello!</h1>
-    <DataTable />
-  </>,
+    <>
+      <h1>Hello! Fixed!</h1>
+      <DataTable />
+    </>,
   document.getElementById('reactComponent')
 );
