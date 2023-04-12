@@ -1,10 +1,11 @@
 {
   "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
     "@mui/material": "^5.12.0",
-    "@mui/styled-engine-sc": "^5.12.0",
+    "knack-api-helper": "^2.1.4",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "styled-components": "^5.3.9"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",

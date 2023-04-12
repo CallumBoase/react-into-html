@@ -1,7 +1,5 @@
-//KnackAPI is already loaded in a script tag
-//React, React-DOM and MaterialUI is already loaded via a script tag
-
-import { React } from 'react';
+import React from 'react';
+import * as KnackAPI from 'knack-api-helper';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Skeleton } from '@mui/material';
 
 const DataTable = () => {
