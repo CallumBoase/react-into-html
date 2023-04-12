@@ -25,6 +25,12 @@ const loadScripts = (scripts, onSuccess, onFailure) => {
     let loadedScripts = 0;
     let failedScripts = 0;
 
+    if(typeof onSuccess !== 'function'){
+        onSuccess = function(){
+            console.log('Scripts loaded');
+        }
+    }
+
     if(typeof onFailure !== 'function'){
         onFailure = function(){
             console.error('Failed to load scripts');
