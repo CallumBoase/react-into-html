@@ -3,4 +3,4 @@
 [[headers]]
     for = "/*"
     [headers.values]
-        Access-Control-Allow-Origin = "optimi.knack.com"
+        Access-Control-Allow-Origin = "https://optimi.knack.com"
