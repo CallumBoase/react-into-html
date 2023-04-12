@@ -4,8 +4,11 @@
 1. Clone this repo
 2. Run NPM install to install dependancies
 3. Build your react component as needed. You can install new dependencies, split your files into folders etc, just make sure the entry point is index.js
-4. When finished, run in terminal `npx webpack` . This will compile index.js and all dependencies into ./dist/bundle.js
+4. When finished, run in terminal `npm run build` . This will compile index.js and all dependencies into ./dist/bundle.js
 5. Once that is done, you can use bundle.js in a static html file like index.html
+
+## Netlify auto-deploying
+new commits to the MAIN branch of the repo will trigger an auto-deploy of the DIST folder to Netlify. Netlify will auto-run `npm run build` when building.
 
 ## Why?
 If you want to add a react component to a HTML page (like in a Knack app) this is useful.
