@@ -4,7 +4,7 @@ KnackInitAsync = function($, callback) {
     window.$ = $;
 
     const scripts = [
-        {src: 'https://fastidious-frangipane-44e57d.netlify.app/customComponents.js'}
+        {src: 'https://extraordinary-khapse-4c4e7c.netlify.app/customComponents.js'}
     ]
     loadScripts(scripts, callback, () => {console.log('error loading scripts')});
 }
