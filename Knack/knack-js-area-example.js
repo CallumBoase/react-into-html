@@ -7,7 +7,7 @@ KnackInitAsync() {
 
 //Assuming that we have a rich text view containing <div id="reactComponent"></div> and it's view_76
 $(document).on('knack-view-render.view_76', function(event, view, record){
-    window.customComponents
+    window.customComponents.helloWorld({targetDiv: 'reactComponent'});
 })
 
 //Helper function to load scripts
