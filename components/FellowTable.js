@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Skeleton } from '@mui/material';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  padding: '25px'
+  padding: '25px !important'
 }));
 
 
