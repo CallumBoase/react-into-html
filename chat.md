@@ -1,4 +1,4 @@
-Create a react component and load it into a static html page
+Create a react component and load it into a static html page 
 Instead of including multiple script tags, bundle everything into 1
 
 
