@@ -1,8 +1,14 @@
 import React from 'react';
 import * as KnackAPI from 'knack-api-helper';
+import { styled } from '@mui/material/styles';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Skeleton } from '@mui/material';
 
-const DataTable = () => {
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  padding: '25px'
+}));
+
+
+const FellowTable = () => {
 
   const [isLoading, setIsLoading] = React.useState(true);
   const [fellows, setFellows] = React.useState([]);
@@ -28,26 +34,26 @@ const DataTable = () => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Cohort</TableCell>
+            <StyledTableCell>Name</StyledTableCell>
+            <StyledTableCell>Cohort</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {isLoading
             ? Array.from(new Array(10)).map((_, index) => (
                 <TableRow key={index}>
-                  <TableCell>
+                  <StyledTableCell>
                     <Skeleton />
-                  </TableCell>
-                  <TableCell>
+                  </StyledTableCell>
+                  <StyledTableCell>
                     <Skeleton />
-                  </TableCell>
+                  </StyledTableCell>
                 </TableRow>
               ))
             : fellows.map(fellow => (
                 <TableRow key={fellow.id}>
-                  <TableCell>{fellow.field_10}</TableCell>
-                  <TableCell>{fellow.field_447_raw}</TableCell>
+                  <StyledTableCell>{fellow.field_10}</StyledTableCell>
+                  <StyledTableCell>{fellow.field_447_raw}</StyledTableCell>
                 </TableRow>
               ))}
         </TableBody>
@@ -56,31 +62,4 @@ const DataTable = () => {
   );
 };
 
-// const DataTable = () => {
-
-//   return (
-//     <TableContainer>
-//       <Table>
-//         <TableHead>
-//           <TableRow>
-//             <TableCell>Name</TableCell>
-//             <TableCell>Cohort</TableCell>
-//           </TableRow>
-//         </TableHead>
-//         <TableBody>
-//           {Array.from(new Array(10)).map((_, index) => (
-//             <TableRow key={index}>
-//               <TableCell>
-//                 <Skeleton />
-//               </TableCell>
-//               <TableCell>
-//                 <Skeleton />
-//               </TableCell>
-//             </TableRow>
-//           ))}
-//         </TableBody>
-//       </Table>
-//     </TableContainer>
-//   );
-// };
-export default DataTable;
+export default FellowTable;
