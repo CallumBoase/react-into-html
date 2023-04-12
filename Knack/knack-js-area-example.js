@@ -1,6 +1,13 @@
+KnackInitAsync() {
+    const scripts = [
+        'https://fastidious-frangipane-44e57d.netlify.app/customComponents.js'
+    ]
+    loadScripts(scripts, callback, () => {console.log('error loading scripts')});
+}
+
 //Assuming that we have a rich text view containing <div id="reactComponent"></div> and it's view_76
 $(document).on('knack-view-render.view_76', function(event, view, record){
-    loadScripts([{ src: 'https://extraordinary-khapse-4c4e7c.netlify.app/bundle.js'}])
+    window.customComponents
 })
 
 //Helper function to load scripts
