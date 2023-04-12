@@ -1,3 +1,8 @@
+Create a react component and load it into a static html page
+Instead of including multiple script tags, bundle everything into 1
+
+
+
 Sure! Here are the step-by-step instructions for creating a simple React component and loading it into a static HTML page using Webpack to bundle your code:
 
 Install Node.js and npm (Node Package Manager) on your computer if you don’t already have them installed.
