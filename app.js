@@ -1,4 +1,4 @@
-import DataTable from './component.js';
+import DataTable from './FellowTable.js';
 
 ReactDOM.render(
   <DataTable />,
