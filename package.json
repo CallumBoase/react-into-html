@@ -1,9 +1,13 @@
 {
-  "type":"module",
+  "type": "module",
   "devDependencies": {
     "@babel/cli": "^7.21.0",
     "@babel/core": "^7.21.4",
+    "@babel/preset-env": "^7.21.4",
     "@babel/preset-react": "^7.18.6",
     "babel-watch": "^7.7.2"
+  },
+  "scripts": {
+    "build": "rm -rf ./public/* && npx babel ./dev/app.js --out-file ./public/app.js && npx babel ./dev/components --out-dir ./public/components && cp ./dev/index.html ./public/index.html"
   }
 }
