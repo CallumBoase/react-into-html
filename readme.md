@@ -1,18 +1,15 @@
-How to use
+# A react component that can be compiled into browser-friendly code
 
-1. Clone repo to your machine
-2. Open a GIT BASH (linux) terminal
-3. All development takes place inside the ./dev folder. 
-    * The dev folder should always contain only app.js and index.html
-    * There should only be 1 folder called components, and this can have as many .js files inside as you want
-    * Write standard react JSX code in app.js and any component .js files. We will transpile to browser-friendly code later
-4. When you're ready to preview the app, in terminal run `npm run build` . This will transpile JSX to browser-friendly javascript and also copy index.html. All final files will be stored in ./public
-5. Open ./public/index.html in live server to preview
+## How to install
+1. Clone this repo
+2. Run NPM install to install dependancies
+3. Build your react component as needed. You can install new dependencies, split your files into folders etc, just make sure the entry point is index.js
+4. When finished, run in terminal `npx webpack` . This will compile index.js and all dependencies into ./dist/bundle.js
+5. Once that is done, you can use bundle.js in a static html file like index.html
 
-There is a netlify site https://extraordinary-khapse-4c4e7c.netlify.app/ configured to watch github repo https://github.com/CallumBoase/react-into-html and deploy the ./public directory as per branch main automatically.
+## Why?
+If you want to add a react component to a HTML page (like in a Knack app) this is useful.
 
-Therefore you can visit https://extraordinary-khapse-4c4e7c.netlify.app/ to see changes after deploy to github (takes 20 seconds to build or so)
+Compiling it like this means you can develop in React using normal conventions, and then compile it into a single script file that can be rendered on a static HTML page.
 
-
-## Loading the react app in a Knack app
-See knack-js-area-example.js
+We avoid a bunch of complexity from other methods, including browsers being unable to render JSX, cross origin issues of import statements in script tags etc.

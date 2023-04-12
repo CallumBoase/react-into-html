@@ -1,6 +1,2 @@
 [build]
-    publish = "public"
-[[headers]]
-    for = "/*"
-    [headers.values]
-        Access-Control-Allow-Origin = "https://optimi.knack.com"
+    publish = "dist"
