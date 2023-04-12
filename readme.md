@@ -12,3 +12,7 @@ How to use
 There is a netlify site https://extraordinary-khapse-4c4e7c.netlify.app/ configured to watch github repo https://github.com/CallumBoase/react-into-html and deploy the ./public directory as per branch main automatically.
 
 Therefore you can visit https://extraordinary-khapse-4c4e7c.netlify.app/ to see changes after deploy to github (takes 20 seconds to build or so)
+
+
+## Loading the react app in a Knack app
+See knack-js-area-example.js
