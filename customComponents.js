@@ -4,27 +4,20 @@ import ReactDOM from 'react-dom';
 import FellowTable from './components/FellowTable.js';
 import HelloWorld from './components/HelloWorld.js';
 
-window.customComponents = {
+const customComponents = {render: {}}
 
-  fellowTable(settings = { targetDiv }) {
-
-    ReactDOM.render(
-      <>
-        <h1>Hello! Fixed2!</h1>
-        <FellowTable />
-      </>,
-      document.getElementById(settings.targetDiv)
-    );
-
-  },
-
-  helloWorld(settings = { targetDiv }) {
-
-    ReactDOM.render(
-      <HelloWorld />,
-      document.getElementById(settings.targetDiv)
-    );
-
-  }
-
+customComponents.render.fellowTable = function fellowTable(settings = { targetDiv }) {
+  ReactDOM.render(
+    <FellowTable />,
+    document.getElementById(settings.targetDiv)
+  );
 }
+
+customComponents.render.helloWorld = function helloWorld(settings = { targetDiv }) {
+  ReactDOM.render(
+    <HelloWorld />,
+    document.getElementById(settings.targetDiv)
+  );
+}
+
+window.customComponents = customComponents;

@@ -2,10 +2,15 @@
 <html>
   <head>
     <title>Hello World with React</title>
+    <script src="dist/customComponents.js"></script>
   </head>
   <body>
-    <div id="reactComponent"></div>
-    <script src="dist/bundle.js"></script>
+    <div id="helloWorld"></div>
+    <div id="fellowTable"></div>
+    <script>
+      window.customComponents.render.helloWorld({targetDiv: 'helloWorld'})
+      window.customComponents.render.fellowTable({targetDiv: 'fellowTable'})
+    </script>
     <!-- Import dependancies -->
   </body>
 </html>
