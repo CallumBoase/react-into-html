@@ -1,6 +1,18 @@
-//Assuming that we have a rich text view containing <div id="reactComponent"></div> and it's view_76
-$(document).on('knack-view-render.view_76', function(event, view, record){
-    loadScripts([{ src: 'https://extraordinary-khapse-4c4e7c.netlify.app/bundle.js'}])
+KnackInitAsync = function($, callback) {
+
+    // REQUIRED: Explicitly include jQuery
+    window.$ = $;
+
+    const scripts = [
+        {src: 'https://extraordinary-khapse-4c4e7c.netlify.app/customComponents.js'}
+    ]
+    loadScripts(scripts, callback, () => {console.log('error loading scripts')});
+}
+
+$(document).on('knack-scene-render.scene_53', function(event, scene){
+    console.log('scene_53')
+    $(`<div id='fellowTable'></div>`).appendTo(`#kn-${scene.key}`);
+    window.customComponents.render.fellowTable({targetDiv: 'fellowTable'});
 })
 
 //Helper function to load scripts
