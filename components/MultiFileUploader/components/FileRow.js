@@ -2,8 +2,16 @@ import React, { useState } from 'react';
 import { TableCell, TableRow, Select, MenuItem, TextField, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-const FileRow = ({ file, category, description, categoryOptions, onCategoryChange, onDescriptionChange, onRemove, isDisabled }) => {
-
+const FileRow = ({ 
+	file, 
+	category, 
+	description, 
+	categoryOptions, 
+	onCategoryChange, 
+	onDescriptionChange, 
+	onRemove, 
+	isDisabled 
+}) => {
 	return (
 		<TableRow>
 			<TableCell>{file.name}</TableCell>

@@ -1,6 +1,6 @@
 // FilesTable.js
 import React from 'react';
-import { Table, TableBody, TableHead, TableRow, TableCell } from '@mui/material';
+import { TableCell, Table, TableBody, TableHead, TableRow } from '@mui/material';
 import FileRow from './FileRow.js';
 
 const FilesTable = ({
