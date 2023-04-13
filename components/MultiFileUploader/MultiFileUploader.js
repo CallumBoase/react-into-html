@@ -12,12 +12,10 @@ import { getMemberOptions } from './helpers/apiCalls.js';
 import getMultiChoiceOptionsFromKnackField from './helpers/getMultiChoiceOptionsFromKnackField.js';
 import { uploadFilesThenCreateDocuments } from './helpers/uploadFilesThenCreateDocuments.js';
 
-//Global variables
-const knackFields = {
-  category: 'field_30',
-  description: 'field_31',
-  member: 'field_33'
-}
+//Import some global info
+import globals from '../../globals.js';
+
+const knackDocumentObjectFields = globals.Knack.objects.documents.fields;
 
 
 //Define our component
@@ -40,12 +38,7 @@ const FileUploader = () => {
   //We include an async function inside like this because it's the recommended way
   //  Rather than using an async function directly as the callback for useEffect
   useEffect(() => {
-    // const fetchCategoryOptions = async () => {
-    //   const categories = await getCategoryOptions();
-    //   setCategoryOptions(categories);
-    // };
-    // fetchCategoryOptions();
-    const categories = getMultiChoiceOptionsFromKnackField(knackFields.category);
+    const categories = getMultiChoiceOptionsFromKnackField(knackDocumentObjectFields.category);
     setCategoryOptions(categories);
   }, []);
 
@@ -58,12 +51,12 @@ const FileUploader = () => {
     };
     fetchMemberOptions();
 
-  })
+  }, []);
 
   //When the file input changes, we need to update the files and filesData variables
   const handleFileChange = (event) => {
     setFiles(event.target.files);
-    setFilesData(Array.from(event.target.files).map((file) => ({ file, category: '', description: '', mmeber: '' })));
+    setFilesData(Array.from(event.target.files).map((file) => ({ file, category: '', description: '', member:'' })));
   };
 
   //When the user clicks the remove button, we need to update the files and filesData variables

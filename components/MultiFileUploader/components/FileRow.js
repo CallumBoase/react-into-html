@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TableCell, TableRow, Select, MenuItem, TextField, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -15,6 +15,7 @@ const FileRow = ({
 	onRemove, 
 	isDisabled 
 }) => {
+	console.log(memberOptions);
 	return (
 		<TableRow>
 			<TableCell>{file.name}</TableCell>
@@ -46,8 +47,8 @@ const FileRow = ({
 						Member...
 					</MenuItem>
 					{memberOptions.map((option) => (
-						<MenuItem key={option.id} value={option.identifier}>
-							{option}
+						<MenuItem key={option.id} value={option.id}>
+							{option.identifier}
 						</MenuItem>
 					))}
 				</Select>

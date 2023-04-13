@@ -6,6 +6,7 @@ import FileRow from './FileRow.js';
 const FilesTable = ({
   filesData,
   categoryOptions,
+  memberOptions,
   handleCategoryChange,
   handleMemberChange,
   handleDescriptionChange,
@@ -32,6 +33,7 @@ const FilesTable = ({
             member={fileData.member}
             description={fileData.description}
             categoryOptions={categoryOptions}
+            memberOptions={memberOptions}
             onCategoryChange={(category) => handleCategoryChange(index, category)}
             onMemberChange={(member) => handleMemberChange(index, member)}
             onDescriptionChange={(description) => handleDescriptionChange(index, description)}

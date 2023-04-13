@@ -1,10 +1,13 @@
 import axios from 'axios';
 import * as KnackAPI from 'knack-api-helper';
+import globals from '../../../globals.js';
+
+const kn = globals.Knack;
 
 const knackAPI = new KnackAPI({
   auth: 'view-based',
-  applicationId: '642d26891085670027a17157',
-  userToken: Knack.getUserToken()
+  applicationId: globals.Knack.applicationId,
+  userToken: window.Knack.getUserToken()
 });
 
 export const uploadFile = async (fileData) => {
@@ -12,12 +15,12 @@ export const uploadFile = async (fileData) => {
   formData.append('files', fileData.file);
 
   const response = await axios.post(
-    'https://api.knack.com/v1/applications/642d26891085670027a17157/assets/file/upload',
+    `https://api.knack.com/v1/applications/${globals.Knack.applicationId}/assets/file/upload`,
     formData,
     {
       headers: {
         'x-knack-rest-api-key': 'knack',
-        'x-knack-application-ID': '642d26891085670027a17157',
+        'x-knack-application-ID': globals.Knack.applicationId,
       },
     }
   );
@@ -25,17 +28,18 @@ export const uploadFile = async (fileData) => {
 
 };
 
-
-
 export const addNewDocumentRecord = async (uploadResult, fileData) => {
+
+  const body = {}
+  body[kn.objects.documents.fields.file] = uploadResult.id;
+  body[kn.objects.documents.fields.category] = fileData.category;
+  body[kn.objects.documents.fields.member] = [fileData.member];
+  body[kn.objects.documents.fields.description] = fileData.description;
 
   const result = await knackAPI.post({
     scene: 'scene_55',
     view: 'view_78',
-    body: {
-      field_29: uploadResult.id,
-      field_30: fileData.description
-    }
+    body
   });
   return result;
 
@@ -49,14 +53,8 @@ export const getMemberOptions = async () => {
     format: 'raw'
   });
   const members = results.records.map((record) => {
-    return {id: record.id, identifier: record.field_32_raw}
+    return {id: record.id, identifier: record[kn.objects.members.fields.memberName]}
   });
   return members;
 
 };
-
-// export const getMemberOptions = async () => {
-//   const response = await axios.get('https://pokeapi.co/api/v2/type');
-//   const data = response.data;
-//   return data.results.slice(0, 10).map((item) => item.name);
-// };
