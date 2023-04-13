@@ -7,7 +7,7 @@ const SubmitButton = ({ isDisabled, onClick }) => {
 
 		<Button
 			variant="outlined"
-			sx={{ px: 3 }}
+			sx={{ px: 3, marginTop: '15px !important' }}
 			disabled={isDisabled}
 			onClick={onClick}
 		>
