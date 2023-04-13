@@ -2,14 +2,15 @@ import React from 'react';
 import { Select, MenuItem } from '@mui/material';
 
 const MemberDropdown = ({
-	props
+	props,
+	rowProps
 }) => {
 	return (
 		<Select
 			displayEmpty
 			disabled={props.isDisabled}
-			value={props.row.documentToCreate.member}
-			onChange={(event) => props.handleMemberChange(props.row.rowNum, event.target.value)}
+			value={rowProps.documentToCreate.member}
+			onChange={(event) => props.handleMemberChange(rowProps.rowNum, event.target.value)}
 		>
 			<MenuItem value="" disabled>
 				Member...

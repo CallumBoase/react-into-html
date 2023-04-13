@@ -19,10 +19,10 @@ const EditableTable = ({
       </TableHead>
       <TableBody>
         {props.documentsToCreate.map((documentToCreate, rowNum) => (
-          props.row = {rowNum, documentToCreate},
           <EditableTableRow
             key={rowNum}
             props={props}
+            rowProps={{rowNum, documentToCreate}}
           />
         ))}
       </TableBody>

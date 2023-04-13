@@ -5,19 +5,22 @@ import MemberDropdown from './MemberDropdown.js';
 import CloseIcon from '@mui/icons-material/Close';
 
 const EditableTableRow = ({
-	props
+	props,
+	rowProps
 }) => {
 	return (
 		<TableRow>
-			<TableCell>{props.row.documentToCreate.file.name}</TableCell>
+			<TableCell>{rowProps.documentToCreate.file.name}</TableCell>
 			<TableCell>
 				<CategoryDropdown
 					props={props}
+					rowProps={rowProps}
 				/>
 			</TableCell>
 			<TableCell>
 				<MemberDropdown 
 					props={props}
+					rowProps={rowProps}
 				/>
 			</TableCell>
 			<TableCell>
@@ -25,12 +28,12 @@ const EditableTableRow = ({
 					multiline
 					minRows={1}
 					disabled={props.isDisabled}
-					value={props.row.documentToCreate.description}
-					onChange={(event) => props.handleDescriptionChange(props.row.rowNum, event.target.value)}
+					value={rowProps.documentToCreate.description}
+					onChange={(event) => props.handleDescriptionChange(rowProps.rowNum, event.target.value)}
 				/>
 			</TableCell>
 			<TableCell>
-				<IconButton onClick={() => props.removeDocumentToCreate(props.row.rowNum)} disabled={props.isDisabled}>
+				<IconButton onClick={() => props.removeDocumentToCreate(rowProps.rowNum)} disabled={props.isDisabled}>
 					<CloseIcon />
 				</IconButton>
 			</TableCell>
