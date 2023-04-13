@@ -33,7 +33,7 @@ const FileUploader = () => {
 
   //Defining our useEffect hooks
   //These are called when the component mounts and when the state variables change
-  
+
   //Fetch the category options from Knack window object
   useEffect(() => {
     const categories = getMultiChoiceOptionsFromKnackField(knackDocumentObjectFields.category);
@@ -52,7 +52,7 @@ const FileUploader = () => {
   //When the file input changes, we need to update the files and documentsToCreate variables
   const updatedocumentsToCreate = (event) => {
     setFiles(event.target.files);
-    setDocumentsToCreate(Array.from(event.target.files).map((file) => ({ file, category: '', description: '', member:'' })));
+    setDocumentsToCreate(Array.from(event.target.files).map((file) => ({ file, category: '', description: '', member: '' })));
   };
 
   //When the user clicks the remove button, we need to update the files and documentsToCreate variables
@@ -129,6 +129,21 @@ const FileUploader = () => {
     setSubmitStatus(null);
   };
 
+  const props = {
+    files,
+    categoryOptions,
+    memberOptions,
+    documentsToCreate,
+    removeDocumentToCreate,
+    handleCategoryChange,
+    handleMemberChange,
+    handleDescriptionChange,
+    handleSubmit,
+    handleReset,
+    isLoading,
+    submitStatus,
+  }
+
   //Logic to help deciding what to render
   //This runs each time the virtual DOM is re-rendered
   //So it controls what shows on the page
@@ -148,14 +163,7 @@ const FileUploader = () => {
       {files.length > 0 && (
         <>
           <EditableTable
-            documentsToCreate={documentsToCreate}
-            categoryOptions={categoryOptions}
-            memberOptions={memberOptions}
-            handleCategoryChange={handleCategoryChange}
-            handleMemberChange={handleMemberChange}
-            handleDescriptionChange={handleDescriptionChange}
-            removeDocumentToCreate={removeDocumentToCreate}
-            isLoading={isLoading}
+            props={props}
           />
           <SubmitButton isDisabled={!allFilesHaveCategory || isLoading} onClick={handleSubmit} />
         </>

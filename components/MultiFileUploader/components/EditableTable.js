@@ -3,15 +3,8 @@ import React from 'react';
 import { TableRow, TableCell, Table, TableBody, TableHead } from '@mui/material';
 import EditableTableRow from './EditableTableRow.js';
 
-const FilesTable = ({
-  documentsToCreate,
-  categoryOptions,
-  memberOptions,
-  handleCategoryChange,
-  handleMemberChange,
-  handleDescriptionChange,
-  removeDocumentToCreate,
-  isLoading,
+const EditableTable = ({
+  props
 }) => {
   return (
     <Table>
@@ -25,20 +18,11 @@ const FilesTable = ({
         </TableRow>
       </TableHead>
       <TableBody>
-        {documentsToCreate.map((documentToCreate, index) => (
+        {props.documentsToCreate.map((documentToCreate, rowNum) => (
+          props.row = {rowNum, documentToCreate},
           <EditableTableRow
-            key={index}
-            file={documentToCreate.file}
-            category={documentToCreate.category}
-            member={documentToCreate.member}
-            description={documentToCreate.description}
-            categoryOptions={categoryOptions}
-            memberOptions={memberOptions}
-            onCategoryChange={(category) => handleCategoryChange(index, category)}
-            onMemberChange={(member) => handleMemberChange(index, member)}
-            onDescriptionChange={(description) => handleDescriptionChange(index, description)}
-            removeDocumentToCreate={() => removeDocumentToCreate(index)}
-            isDisabled={isLoading}
+            key={rowNum}
+            props={props}
           />
         ))}
       </TableBody>
@@ -46,4 +30,4 @@ const FilesTable = ({
   );
 };
 
-export default FilesTable;
+export default EditableTable;
