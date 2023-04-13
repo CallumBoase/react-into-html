@@ -12,6 +12,13 @@ const theme = createTheme({
                 },
             },
         },
+        SubmitButton: {
+            styleOverrides: {
+                root: {
+                    marginTop: '10px !important'
+                },
+            },
+        }
     },
 });
 
