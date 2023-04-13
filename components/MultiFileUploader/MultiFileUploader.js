@@ -9,7 +9,12 @@ import ErrorBanner from './components/ErrorBanner.js';
 
 //Import some helper functions related to API calls
 import { getCategoryOptions } from './helpers/apiCalls.js';
+import getMultiChoiceOptionsFromKnackField from './helpers/getMultiChoiceOptionsFromKnackField.js';
 import { uploadFilesThenCreateDocuments } from './helpers/uploadFilesThenCreateDocuments.js';
+
+//Global variables
+const categoryField = 'field_30';
+
 
 //Define our component
 const FileUploader = () => {
@@ -30,11 +35,13 @@ const FileUploader = () => {
   //We include an async function inside like this because it's the recommended way
   //  Rather than using an async function directly as the callback for useEffect
   useEffect(() => {
-    const fetchCategoryOptions = async () => {
-      const categories = await getCategoryOptions();
-      setCategoryOptions(categories);
-    };
-    fetchCategoryOptions();
+    // const fetchCategoryOptions = async () => {
+    //   const categories = await getCategoryOptions();
+    //   setCategoryOptions(categories);
+    // };
+    // fetchCategoryOptions();
+    const categories = getMultiChoiceOptionsFromKnackField(categoryField);
+    setCategoryOptions(categories);
   }, []);
 
   //When the file input changes, we need to update the files and filesData variables
