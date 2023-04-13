@@ -1,6 +1,6 @@
-import { uploadFile, addNewDocumentRecord } from './api.js';
+import { uploadFile, addNewDocumentRecord } from './apiCalls.js';
 
-export const uploadFilesCreateRecords = async (filesData) => {
+export const uploadFilesThenCreateDocuments = async (filesData) => {
 	const uploadPromises = filesData.map(async (fileData) => {
 		try {
 			const uploadResult = await uploadFile(fileData);
