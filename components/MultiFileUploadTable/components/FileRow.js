@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TableCell, TableRow, Select, MenuItem, TextField, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-const FileRow = ({ file, category, description, categoryOptions, onCategoryChange, onDescriptionChange, onRemove }) => {
+const FileRow = ({ file, category, description, categoryOptions, onCategoryChange, onDescriptionChange, onRemove, isDisabled }) => {
 
 	return (
 		<TableRow>
@@ -10,6 +10,7 @@ const FileRow = ({ file, category, description, categoryOptions, onCategoryChang
 			<TableCell>
 				<Select
 					displayEmpty
+					disabled={isDisabled}
 					value={category}
 					onChange={(event) => onCategoryChange(event.target.value)}
 				>
@@ -27,12 +28,13 @@ const FileRow = ({ file, category, description, categoryOptions, onCategoryChang
 				<TextField
 					multiline
 					minRows={1}
+					disabled={isDisabled}
 					value={description}
 					onChange={(event) => onDescriptionChange(event.target.value)}
 				/>
 			</TableCell>
 			<TableCell>
-				<IconButton onClick={onRemove}>
+				<IconButton onClick={onRemove} disabled={isDisabled}>
 					<CloseIcon />
 				</IconButton>
 			</TableCell>

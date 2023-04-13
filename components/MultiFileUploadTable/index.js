@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableHead, TableRow, TableCell } from '@mui/material';
+import { Alert, Table, TableBody, TableHead, TableRow, TableCell } from '@mui/material';
 import FileRow from './components/FileRow.js';
 import SubmitButton from './components/SubmitButton.js';
 import { uploadFilesThenCreateDocuments } from './helpers/uploadFilesThenCreateDocuments.js';
@@ -9,6 +9,8 @@ const FileUploader = () => {
   const [files, setFiles] = useState([]);
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [filesData, setFilesData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null);
 
   useEffect(() => {
     fetch('https://pokeapi.co/api/v2/type')
@@ -46,7 +48,11 @@ const FileUploader = () => {
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     await uploadFilesThenCreateDocuments(filesData);
+    setIsLoading(false);
+    setSubmitStatus('success');
+    setFiles([]);
   };
 
   const allFilesHaveCategory = filesData.every((fileData) => fileData.category !== '');
@@ -76,12 +82,19 @@ const FileUploader = () => {
                   onCategoryChange={(category) => handleCategoryChange(index, category)}
                   onDescriptionChange={(description) => handleDescriptionChange(index, description)}
                   onRemove={() => handleFileRemove(index)}
+                  isDisabled={isLoading}
                 />
               ))}
             </TableBody>
           </Table>
-          <SubmitButton isDisabled={!allFilesHaveCategory} onClick={handleSubmit} />
+          <SubmitButton isDisabled={!allFilesHaveCategory || isLoading} onClick={handleSubmit} />
         </>
+      )}
+      {submitStatus === 'success' && (
+        <Alert severity="success">Documents created successfully!!</Alert>
+      )}
+      {submitStatus === 'error' && (
+        <Alert severity="errpr">One or more failed. Boo.</Alert>
       )}
     </>
   );
