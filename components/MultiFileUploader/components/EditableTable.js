@@ -4,13 +4,13 @@ import { TableRow, TableCell, Table, TableBody, TableHead } from '@mui/material'
 import EditableTableRow from './EditableTableRow.js';
 
 const FilesTable = ({
-  filesData,
+  documentsToCreate,
   categoryOptions,
   memberOptions,
   handleCategoryChange,
   handleMemberChange,
   handleDescriptionChange,
-  removeFileFromFileData,
+  removeDocumentToCreate,
   isLoading,
 }) => {
   return (
@@ -25,19 +25,19 @@ const FilesTable = ({
         </TableRow>
       </TableHead>
       <TableBody>
-        {filesData.map((fileData, index) => (
+        {documentsToCreate.map((documentToCreate, index) => (
           <EditableTableRow
             key={index}
-            file={fileData.file}
-            category={fileData.category}
-            member={fileData.member}
-            description={fileData.description}
+            file={documentToCreate.file}
+            category={documentToCreate.category}
+            member={documentToCreate.member}
+            description={documentToCreate.description}
             categoryOptions={categoryOptions}
             memberOptions={memberOptions}
             onCategoryChange={(category) => handleCategoryChange(index, category)}
             onMemberChange={(member) => handleMemberChange(index, member)}
             onDescriptionChange={(description) => handleDescriptionChange(index, description)}
-            removeFileFromFileData={() => removeFileFromFileData(index)}
+            removeDocumentToCreate={() => removeDocumentToCreate(index)}
             isDisabled={isLoading}
           />
         ))}

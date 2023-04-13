@@ -14,7 +14,7 @@ const EditableTableRow = ({
 	onCategoryChange,
 	onMemberChange,
 	onDescriptionChange,
-	removeFileFromFileData,
+	removeDocumentToCreate,
 	isDisabled
 }) => {
 	return (
@@ -46,7 +46,7 @@ const EditableTableRow = ({
 				/>
 			</TableCell>
 			<TableCell>
-				<IconButton onClick={removeFileFromFileData} disabled={isDisabled}>
+				<IconButton onClick={removeDocumentToCreate} disabled={isDisabled}>
 					<CloseIcon />
 				</IconButton>
 			</TableCell>

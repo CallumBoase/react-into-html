@@ -27,7 +27,7 @@ const FileUploader = () => {
   const [files, setFiles] = useState([]);
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [memberOptions, setMemberOptions] = useState([]);
-  const [filesData, setFilesData] = useState([]);
+  const [documentsToCreate, setDocumentsToCreate] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
@@ -49,20 +49,22 @@ const FileUploader = () => {
     fetchMemberOptions();
   }, []);
 
-  //When the file input changes, we need to update the files and filesData variables
-  const updateFilesData = (event) => {
+  //When the file input changes, we need to update the files and documentsToCreate variables
+  const updatedocumentsToCreate = (event) => {
     setFiles(event.target.files);
-    setFilesData(Array.from(event.target.files).map((file) => ({ file, category: '', description: '', member:'' })));
+    setDocumentsToCreate(Array.from(event.target.files).map((file) => ({ file, category: '', description: '', member:'' })));
   };
 
-  //When the user clicks the remove button, we need to update the files and filesData variables
-  const removeFileFromFileData = (index) => {
+  //When the user clicks the remove button, we need to update the files and documentsToCreate variables
+  const removeDocumentToCreate = (index) => {
 
     //Update the files variable - get rid of the file corresponding to the removed row
     setFiles((prevFiles) => removeNthItemFromArray(Array.from(prevFiles), index));
+    console.log(files);
 
-    //Update the filesData variable - get rid of the fileData corresponding to the removed row
-    setFilesData((prevFilesData) => removeNthItemFromArray(prevFilesData, index));
+    //Update the documentsToCreate variable - get rid of the documentsToCreate corresponding to the removed row
+    setDocumentsToCreate((prevDocumentsToCreate) => removeNthItemFromArray(prevDocumentsToCreate, index));
+    console.log(documentsToCreate)
 
   };
 
@@ -71,33 +73,33 @@ const FileUploader = () => {
     return array.filter((_, i) => i !== index);
   }
 
-  //When the user changes the category for a file, we need to update the filesData variable
+  //When the user changes the category for a file, we need to update the documentsToCreate variable
   const handleCategoryChange = (index, category) => {
-    setFilesData((prevFilesData) => {
-      const newFilesData = prevFilesData.map((fileData, i) =>
-        i === index ? { ...fileData, category } : fileData
+    setDocumentsToCreate((prevDocumentsToCreate) => {
+      const newDocumentsToCreate = prevDocumentsToCreate.map((documentToCreate, i) =>
+        i === index ? { ...documentToCreate, category } : documentToCreate
       );
-      return newFilesData;
+      return newDocumentsToCreate;
     });
   };
 
   //When the user changes the member value a file, we need to update the memerData variable
   const handleMemberChange = (index, member) => {
-    setFilesData((prevFilesData) => {
-      const newFilesData = prevFilesData.map((fileData, i) =>
-        i === index ? { ...fileData, member } : fileData
+    setDocumentsToCreate((prevDocumentsToCreate) => {
+      const newDocumentsToCreate = prevDocumentsToCreate.map((documentToCreate, i) =>
+        i === index ? { ...documentToCreate, member } : documentToCreate
       );
-      return newFilesData;
+      return newDocumentsToCreate;
     });
   };
 
-  //When the user changes the description for a file, we need to update the filesData variable
+  //When the user changes the description for a file, we need to update the documentsToCreate variable
   const handleDescriptionChange = (index, description) => {
-    setFilesData((prevFilesData) => {
-      const newFilesData = prevFilesData.map((fileData, i) =>
-        i === index ? { ...fileData, description } : fileData
+    setDocumentsToCreate((prevDocumentsToCreate) => {
+      const newDocumentsToCreate = prevDocumentsToCreate.map((documentToCreate, i) =>
+        i === index ? { ...documentToCreate, description } : documentToCreate
       );
-      return newFilesData;
+      return newDocumentsToCreate;
     });
   };
 
@@ -107,7 +109,7 @@ const FileUploader = () => {
   const handleSubmit = async () => {
     setIsLoading(true);
     Knack.showSpinner();
-    const results = await uploadFilesThenCreateDocuments(filesData);
+    const results = await uploadFilesThenCreateDocuments(documentsToCreate);
     if (results.failed === 0) {
       setSubmitStatus('success');
     } else {
@@ -123,36 +125,36 @@ const FileUploader = () => {
   //This means the table and banners are gone, and the file input is visible again
   const handleReset = () => {
     setFiles([]);
-    setFilesData([]);
+    setDocumentsToCreate([]);
     setSubmitStatus(null);
   };
 
   //Logic to help deciding what to render
   //This runs each time the virtual DOM is re-rendered
   //So it controls what shows on the page
-  const allFilesHaveCategory = filesData.every((fileData) => fileData.category !== '');
+  const allFilesHaveCategory = documentsToCreate.every((documentToCreate) => documentToCreate.category !== '');
   const showFileInput = files.length === 0 && submitStatus === null;
 
   //The actual component JSX that gets rendered
   //We are calling a bunch of components defined in separate files, and passing them variables they require
   //We also run some logic to decide what to render
-  //Eg {showFileInput && <input type="file" multiple onChange={updateFilesData}/>}
+  //Eg {showFileInput && <input type="file" multiple onChange={updatedocumentsToCreate}/>}
   //  Means that the file input will only be rendered if the showFileInput variable is true
   return (
     <>
       {showFileInput && (
-        <input type="file" multiple onChange={updateFilesData} />
+        <input type="file" multiple onChange={updatedocumentsToCreate} />
       )}
       {files.length > 0 && (
         <>
           <EditableTable
-            filesData={filesData}
+            documentsToCreate={documentsToCreate}
             categoryOptions={categoryOptions}
             memberOptions={memberOptions}
             handleCategoryChange={handleCategoryChange}
             handleMemberChange={handleMemberChange}
             handleDescriptionChange={handleDescriptionChange}
-            removeFileFromFileData={removeFileFromFileData}
+            removeDocumentToCreate={removeDocumentToCreate}
             isLoading={isLoading}
           />
           <SubmitButton isDisabled={!allFilesHaveCategory || isLoading} onClick={handleSubmit} />
