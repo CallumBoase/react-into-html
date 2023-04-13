@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 
 //Import the components defined in other files
-import FilesTable from './components/FilesTable.js';
+import EditableTable from './components/EditableTable.js';
 import SubmitButton from './components/SubmitButton.js';
 import SuccessBanner from './components/SuccessBanner.js';
 import ErrorBanner from './components/ErrorBanner.js';
@@ -15,6 +15,7 @@ import { uploadFilesThenCreateDocuments } from './helpers/uploadFilesThenCreateD
 //Import some global info
 import globals from '../../globals.js';
 
+//Shortcut to global variables
 const knackDocumentObjectFields = globals.Knack.objects.documents.fields;
 
 
@@ -30,37 +31,32 @@ const FileUploader = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
-  //When the component mounts, we need to get the category options from the API
-  //UseEffect called in this way (with an empty array as the second argument) 
-  //  Will only run once, when the component mounts
-  //Once the category options have been obtained, the categories variable is updated
-  //  This causes the virtual DOM to be re-rendered with this new information
-  //We include an async function inside like this because it's the recommended way
-  //  Rather than using an async function directly as the callback for useEffect
+  //Defining our useEffect hooks
+  //These are called when the component mounts and when the state variables change
+  
+  //Fetch the category options from Knack window object
   useEffect(() => {
     const categories = getMultiChoiceOptionsFromKnackField(knackDocumentObjectFields.category);
     setCategoryOptions(categories);
   }, []);
 
-  //Fetch the member options from Knack
+  //Fetch the member options from Knack API
   useEffect(() => {
-
     const fetchMemberOptions = async () => {
       const members = await getMemberOptions();
       setMemberOptions(members);
     };
     fetchMemberOptions();
-
   }, []);
 
   //When the file input changes, we need to update the files and filesData variables
-  const handleFileChange = (event) => {
+  const updateFilesData = (event) => {
     setFiles(event.target.files);
     setFilesData(Array.from(event.target.files).map((file) => ({ file, category: '', description: '', member:'' })));
   };
 
   //When the user clicks the remove button, we need to update the files and filesData variables
-  const handleFileRemove = (index) => {
+  const removeFileFromFileData = (index) => {
 
     //Update the files variable - get rid of the file corresponding to the removed row
     setFiles((prevFiles) => removeNthItemFromArray(Array.from(prevFiles), index));
@@ -140,23 +136,23 @@ const FileUploader = () => {
   //The actual component JSX that gets rendered
   //We are calling a bunch of components defined in separate files, and passing them variables they require
   //We also run some logic to decide what to render
-  //Eg {showFileInput && <input type="file" multiple onChange={handleFileChange}/>}
+  //Eg {showFileInput && <input type="file" multiple onChange={updateFilesData}/>}
   //  Means that the file input will only be rendered if the showFileInput variable is true
   return (
     <>
       {showFileInput && (
-        <input type="file" multiple onChange={handleFileChange} />
+        <input type="file" multiple onChange={updateFilesData} />
       )}
       {files.length > 0 && (
         <>
-          <FilesTable
+          <EditableTable
             filesData={filesData}
             categoryOptions={categoryOptions}
             memberOptions={memberOptions}
             handleCategoryChange={handleCategoryChange}
             handleMemberChange={handleMemberChange}
             handleDescriptionChange={handleDescriptionChange}
-            handleFileRemove={handleFileRemove}
+            removeFileFromFileData={removeFileFromFileData}
             isLoading={isLoading}
           />
           <SubmitButton isDisabled={!allFilesHaveCategory || isLoading} onClick={handleSubmit} />

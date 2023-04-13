@@ -1,7 +1,7 @@
 // FilesTable.js
 import React from 'react';
-import { TableCell, Table, TableBody, TableHead, TableRow } from '@mui/material';
-import FileRow from './FileRow.js';
+import { TableRow, TableCell, Table, TableBody, TableHead } from '@mui/material';
+import EditableTableRow from './EditableTableRow.js';
 
 const FilesTable = ({
   filesData,
@@ -10,7 +10,7 @@ const FilesTable = ({
   handleCategoryChange,
   handleMemberChange,
   handleDescriptionChange,
-  handleFileRemove,
+  removeFileFromFileData,
   isLoading,
 }) => {
   return (
@@ -26,7 +26,7 @@ const FilesTable = ({
       </TableHead>
       <TableBody>
         {filesData.map((fileData, index) => (
-          <FileRow
+          <EditableTableRow
             key={index}
             file={fileData.file}
             category={fileData.category}
@@ -37,7 +37,7 @@ const FilesTable = ({
             onCategoryChange={(category) => handleCategoryChange(index, category)}
             onMemberChange={(member) => handleMemberChange(index, member)}
             onDescriptionChange={(description) => handleDescriptionChange(index, description)}
-            onRemove={() => handleFileRemove(index)}
+            removeFileFromFileData={() => removeFileFromFileData(index)}
             isDisabled={isLoading}
           />
         ))}
