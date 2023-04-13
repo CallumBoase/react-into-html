@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import FellowTable from './components/FellowTable.js';
 import HelloWorld from './components/HelloWorld.js';
-import MultiFileUpload from './components/MultiFileUpload.js';
+import MultiFileUpload from './components/MultiFileUploadTable/index.js';
 
 const customComponents = {render: {}}
 
