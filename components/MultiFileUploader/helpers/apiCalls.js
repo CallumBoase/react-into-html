@@ -24,6 +24,7 @@ export const addNewDocumentRecord = async (uploadResult, fileData) => {
   const knackAPI = new KnackAPI({
     auth: 'view-based',
     applicationId: '642d26891085670027a17157',
+    userToken: Knack.getUserToken()
   });
 
   const result = await knackAPI.post({
