@@ -15,7 +15,6 @@ const FileRow = ({
 	onRemove, 
 	isDisabled 
 }) => {
-	console.log(memberOptions);
 	return (
 		<TableRow>
 			<TableCell>{file.name}</TableCell>
