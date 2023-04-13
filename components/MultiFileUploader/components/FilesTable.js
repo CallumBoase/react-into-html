@@ -7,6 +7,7 @@ const FilesTable = ({
   filesData,
   categoryOptions,
   handleCategoryChange,
+  handleMemberChange,
   handleDescriptionChange,
   handleFileRemove,
   isLoading,
@@ -17,6 +18,7 @@ const FilesTable = ({
         <TableRow>
           <TableCell>File</TableCell>
           <TableCell>Category</TableCell>
+          <TableCell>Member</TableCell>
           <TableCell>Description</TableCell>
           <TableCell />
         </TableRow>
@@ -27,9 +29,11 @@ const FilesTable = ({
             key={index}
             file={fileData.file}
             category={fileData.category}
+            member={fileData.member}
             description={fileData.description}
             categoryOptions={categoryOptions}
             onCategoryChange={(category) => handleCategoryChange(index, category)}
+            onMemberChange={(member) => handleMemberChange(index, member)}
             onDescriptionChange={(description) => handleDescriptionChange(index, description)}
             onRemove={() => handleFileRemove(index)}
             isDisabled={isLoading}

@@ -8,12 +8,16 @@ import SuccessBanner from './components/SuccessBanner.js';
 import ErrorBanner from './components/ErrorBanner.js';
 
 //Import some helper functions related to API calls
-import { getCategoryOptions } from './helpers/apiCalls.js';
+import { getMemberOptions } from './helpers/apiCalls.js';
 import getMultiChoiceOptionsFromKnackField from './helpers/getMultiChoiceOptionsFromKnackField.js';
 import { uploadFilesThenCreateDocuments } from './helpers/uploadFilesThenCreateDocuments.js';
 
 //Global variables
-const categoryField = 'field_30';
+const knackFields = {
+  category: 'field_30',
+  description: 'field_31',
+  member: 'field_33'
+}
 
 
 //Define our component
@@ -23,6 +27,7 @@ const FileUploader = () => {
   //Each time a state variable changes, the virtual DOM will re-render
   const [files, setFiles] = useState([]);
   const [categoryOptions, setCategoryOptions] = useState([]);
+  const [memberOptions, setMemberOptions] = useState([]);
   const [filesData, setFilesData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
@@ -40,19 +45,30 @@ const FileUploader = () => {
     //   setCategoryOptions(categories);
     // };
     // fetchCategoryOptions();
-    const categories = getMultiChoiceOptionsFromKnackField(categoryField);
+    const categories = getMultiChoiceOptionsFromKnackField(knackFields.category);
     setCategoryOptions(categories);
   }, []);
+
+  //Fetch the member options from Knack
+  useEffect(() => {
+
+    const fetchMemberOptions = async () => {
+      const members = await getMemberOptions();
+      setMemberOptions(members);
+    };
+    fetchMemberOptions();
+
+  })
 
   //When the file input changes, we need to update the files and filesData variables
   const handleFileChange = (event) => {
     setFiles(event.target.files);
-    setFilesData(Array.from(event.target.files).map((file) => ({ file, category: '', description: ''})));
+    setFilesData(Array.from(event.target.files).map((file) => ({ file, category: '', description: '', mmeber: '' })));
   };
 
   //When the user clicks the remove button, we need to update the files and filesData variables
   const handleFileRemove = (index) => {
-    
+
     //Update the files variable - get rid of the file corresponding to the removed row
     setFiles((prevFiles) => removeNthItemFromArray(Array.from(prevFiles), index));
 
@@ -62,7 +78,7 @@ const FileUploader = () => {
   };
 
   //Helper function to remove an item from an array
-  function removeNthItemFromArray(array, index){
+  function removeNthItemFromArray(array, index) {
     return array.filter((_, i) => i !== index);
   }
 
@@ -71,6 +87,16 @@ const FileUploader = () => {
     setFilesData((prevFilesData) => {
       const newFilesData = prevFilesData.map((fileData, i) =>
         i === index ? { ...fileData, category } : fileData
+      );
+      return newFilesData;
+    });
+  };
+
+  //When the user changes the member value a file, we need to update the memerData variable
+  const handleMemberChange = (index, member) => {
+    setFilesData((prevFilesData) => {
+      const newFilesData = prevFilesData.map((fileData, i) =>
+        i === index ? { ...fileData, member } : fileData
       );
       return newFilesData;
     });
@@ -93,7 +119,7 @@ const FileUploader = () => {
     setIsLoading(true);
     Knack.showSpinner();
     const results = await uploadFilesThenCreateDocuments(filesData);
-    if(results.failed === 0){
+    if (results.failed === 0) {
       setSubmitStatus('success');
     } else {
       setSubmitStatus('error');
@@ -126,14 +152,16 @@ const FileUploader = () => {
   return (
     <>
       {showFileInput && (
-        <input type="file" multiple onChange={handleFileChange}/>
+        <input type="file" multiple onChange={handleFileChange} />
       )}
       {files.length > 0 && (
         <>
           <FilesTable
             filesData={filesData}
             categoryOptions={categoryOptions}
+            memberOptions={memberOptions}
             handleCategoryChange={handleCategoryChange}
+            handleMemberChange={handleMemberChange}
             handleDescriptionChange={handleDescriptionChange}
             handleFileRemove={handleFileRemove}
             isLoading={isLoading}

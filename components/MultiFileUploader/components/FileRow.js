@@ -5,9 +5,12 @@ import CloseIcon from '@mui/icons-material/Close';
 const FileRow = ({ 
 	file, 
 	category, 
+	member,
 	description, 
 	categoryOptions, 
-	onCategoryChange, 
+	memberOptions,
+	onCategoryChange,
+	onMemberChange,
 	onDescriptionChange, 
 	onRemove, 
 	isDisabled 
@@ -27,6 +30,23 @@ const FileRow = ({
 					</MenuItem>
 					{categoryOptions.map((option) => (
 						<MenuItem key={option} value={option}>
+							{option}
+						</MenuItem>
+					))}
+				</Select>
+			</TableCell>
+			<TableCell>
+				<Select
+					displayEmpty
+					disabled={isDisabled}
+					value={member}
+					onChange={(event) => onMemberChange(event.target.value)}
+				>
+					<MenuItem value="" disabled>
+						Member...
+					</MenuItem>
+					{memberOptions.map((option) => (
+						<MenuItem key={option.id} value={option.identifier}>
 							{option}
 						</MenuItem>
 					))}

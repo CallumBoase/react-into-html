@@ -1,6 +1,12 @@
 import axios from 'axios';
 import * as KnackAPI from 'knack-api-helper';
 
+const knackAPI = new KnackAPI({
+  auth: 'view-based',
+  applicationId: '642d26891085670027a17157',
+  userToken: Knack.getUserToken()
+});
+
 export const uploadFile = async (fileData) => {
   const formData = new FormData();
   formData.append('files', fileData.file);
@@ -19,13 +25,9 @@ export const uploadFile = async (fileData) => {
 
 };
 
-export const addNewDocumentRecord = async (uploadResult, fileData) => {
 
-  const knackAPI = new KnackAPI({
-    auth: 'view-based',
-    applicationId: '642d26891085670027a17157',
-    userToken: Knack.getUserToken()
-  });
+
+export const addNewDocumentRecord = async (uploadResult, fileData) => {
 
   const result = await knackAPI.post({
     scene: 'scene_55',
@@ -39,8 +41,19 @@ export const addNewDocumentRecord = async (uploadResult, fileData) => {
 
 };
 
-export const getCategoryOptions = async () => {
-  const response = await axios.get('https://pokeapi.co/api/v2/type');
-  const data = response.data;
-  return data.results.slice(0, 10).map((item) => item.name);
+export const getMemberOptions = async () => {
+
+  const result = await knackAPI.getMany({
+    scene: 'scene_55',
+    view: 'view_82',
+    format: 'raw'
+  });
+  return result.records.map((record) => record.field_31);
+
 };
+
+// export const getMemberOptions = async () => {
+//   const response = await axios.get('https://pokeapi.co/api/v2/type');
+//   const data = response.data;
+//   return data.results.slice(0, 10).map((item) => item.name);
+// };
