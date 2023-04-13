@@ -83,7 +83,7 @@ const FileUploader = () => {
     });
   };
 
-  //When the user changes the member value a file, we need to update the memerData variable
+  //When the user changes the member value a file, we need to update the documentsToCreate variable
   const handleMemberChange = (index, member) => {
     setDocumentsToCreate((prevDocumentsToCreate) => {
       const newDocumentsToCreate = prevDocumentsToCreate.map((documentToCreate, i) =>
