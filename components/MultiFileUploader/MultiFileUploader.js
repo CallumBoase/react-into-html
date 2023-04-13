@@ -84,6 +84,7 @@ const FileUploader = () => {
   //We also reset the files state variable to an empty array, which hides the table.
   const handleSubmit = async () => {
     setIsLoading(true);
+    Knack.showSpinner();
     const results = await uploadFilesThenCreateDocuments(filesData);
     if(results.failed === 0){
       setSubmitStatus('success');
@@ -91,6 +92,7 @@ const FileUploader = () => {
       setSubmitStatus('error');
     }
     setIsLoading(false);
+    Knack.hideSpinner();
     setFiles([]);
   };
 
