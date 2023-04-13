@@ -43,12 +43,15 @@ export const addNewDocumentRecord = async (uploadResult, fileData) => {
 
 export const getMemberOptions = async () => {
 
-  const result = await knackAPI.getMany({
+  const results = await knackAPI.getMany({
     scene: 'scene_55',
     view: 'view_82',
     format: 'raw'
   });
-  return result.records.map((record) => record.field_31);
+  const members = results.records.map((record) => {
+    return {id: record.id, identifier: record.field_32_raw}
+  });
+  return members;
 
 };
 
