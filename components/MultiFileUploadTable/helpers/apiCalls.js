@@ -5,41 +5,35 @@ export const uploadFile = async (fileData) => {
   const formData = new FormData();
   formData.append('files', fileData.file);
 
-  try {
-    const response = await axios.post(
-      'https://api.knack.com/v1/applications/642d26891085670027a17157/assets/file/upload',
-      formData,
-      {
-        headers: {
-          'x-knack-rest-api-key': 'knack',
-          'x-knack-application-ID': '642d26891085670027a17157',
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
+  const response = await axios.post(
+    'https://api.knack.com/v1/applications/642d26891085670027a17157/assets/file/upload',
+    formData,
+    {
+      headers: {
+        'x-knack-rest-api-key': 'knack',
+        'x-knack-application-ID': '642d26891085670027a17157',
+      },
+    }
+  );
+  return response.data;
+
 };
 
 export const addNewDocumentRecord = async (uploadResult, fileData) => {
-    const knackAPI = new KnackAPI({
-        auth: 'view-based',
-        applicationId: '642d26891085670027a17157',
-    });
 
-    try {
-        const result = await knackAPI.post({
-            scene: 'scene_55',
-            view: 'view_78',
-            body: {
-                field_29: uploadResult.id,
-                field_30: fileData.description
-            }
-        });
-        return result;
-    } catch (error) {
-        console.error(error);
+  const knackAPI = new KnackAPI({
+    auth: 'view-based',
+    applicationId: '642d26891085670027a17157',
+  });
+
+  const result = await knackAPI.post({
+    scene: 'scene_55',
+    view: 'view_78',
+    body: {
+      field_29: uploadResult.id,
+      field_30: fileData.description
     }
+  });
+  return result;
 
 };

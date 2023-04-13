@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Table, TableBody, TableHead, TableRow, TableCell } from '@mui/material';
-import FileRow from './components/FileRow.js';
+import FilesTable from './components/FilesTable.js';
 import SubmitButton from './components/SubmitButton.js';
+import SuccessBanner from './components/SuccessBanner.js';
+import ErrorBanner from './components/ErrorBanner.js';
 import { uploadFilesThenCreateDocuments } from './helpers/uploadFilesThenCreateDocuments.js';
 
 const FileUploader = () => {
@@ -27,6 +28,7 @@ const FileUploader = () => {
 
   const handleFileRemove = (index) => {
     setFiles((prevFiles) => [...prevFiles].filter((_, i) => i !== index));
+    setFilesData((prevFilesData) => [...prevFilesData].filter((_, i) => i !== index));
   };
 
   const handleCategoryChange = (index, category) => {
@@ -49,52 +51,48 @@ const FileUploader = () => {
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    await uploadFilesThenCreateDocuments(filesData);
+    const results = await uploadFilesThenCreateDocuments(filesData);
+    if(results.failed === 0){
+      setSubmitStatus('success');
+    } else {
+      setSubmitStatus('error');
+    }
     setIsLoading(false);
-    setSubmitStatus('success');
     setFiles([]);
   };
 
+  const handleReset = () => {
+    setFiles([]);
+    setFilesData([]);
+    setSubmitStatus(null);
+  };
+
   const allFilesHaveCategory = filesData.every((fileData) => fileData.category !== '');
+  const showFileInput = files.length === 0 && submitStatus === null;
 
   return (
     <>
-      <input type="file" multiple onChange={handleFileChange} />
+      {showFileInput && (
+        <input type="file" multiple onChange={handleFileChange}/>
+      )}
       {files.length > 0 && (
         <>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>File</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filesData.map((fileData, index) => (
-                <FileRow
-                  key={index}
-                  file={fileData.file}
-                  category={fileData.category}
-                  description={fileData.description}
-                  categoryOptions={categoryOptions}
-                  onCategoryChange={(category) => handleCategoryChange(index, category)}
-                  onDescriptionChange={(description) => handleDescriptionChange(index, description)}
-                  onRemove={() => handleFileRemove(index)}
-                  isDisabled={isLoading}
-                />
-              ))}
-            </TableBody>
-          </Table>
+          <FilesTable
+            filesData={filesData}
+            categoryOptions={categoryOptions}
+            handleCategoryChange={handleCategoryChange}
+            handleDescriptionChange={handleDescriptionChange}
+            handleFileRemove={handleFileRemove}
+            isLoading={isLoading}
+          />
           <SubmitButton isDisabled={!allFilesHaveCategory || isLoading} onClick={handleSubmit} />
         </>
       )}
       {submitStatus === 'success' && (
-        <Alert severity="success">Documents created successfully!!</Alert>
+        <SuccessBanner handleReset={handleReset} />
       )}
       {submitStatus === 'error' && (
-        <Alert severity="errpr">One or more failed. Boo.</Alert>
+        <ErrorBanner handleReset={handleReset} />
       )}
     </>
   );

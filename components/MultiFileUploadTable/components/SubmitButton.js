@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@mui/material';
 
-const SubmitButton = ({isDisabled, onClick }) => {
+const SubmitButton = ({ isDisabled, onClick }) => {
 	return (
 
 		<Button
