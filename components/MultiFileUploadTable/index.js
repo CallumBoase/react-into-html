@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableHead, TableRow, TableCell } from '@mui/material';
 import FileRow from './FileRow.js';
 import SubmitButton from './SubmitButton.js';
+import { uploadFilesCreateRecords } from './uploadFilesCreateRecords.js';
 
 const FileUploader = () => {
 
@@ -46,13 +47,18 @@ const FileUploader = () => {
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    console.log('handle submit')
     const data = filesData.map((fileData) => ({
       name: fileData.file.name,
       category: fileData.category,
       description: fileData.description,
     }));
     console.log('data:', data);
+
+    await uploadFilesCreateRecords(filesData);
+
+
   };
 
   const allFilesHaveCategory = filesData.every((fileData) => fileData.category !== '');
