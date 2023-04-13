@@ -37,3 +37,9 @@ export const addNewDocumentRecord = async (uploadResult, fileData) => {
   return result;
 
 };
+
+export const getCategoryOptions = async () => {
+  const response = await axios.get('https://pokeapi.co/api/v2/type');
+  const data = response.data;
+  return data.results.slice(0, 10).map((item) => item.name);
+};
