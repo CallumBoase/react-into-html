@@ -28,12 +28,10 @@ const FileUploader = () => {
   };
 
   const handleCategoryChange = (index, category) => {
-    console.log(`handleCategoryChange called with index: ${index} and category: ${category}`);
     setFilesData((prevFilesData) => {
       const newFilesData = prevFilesData.map((fileData, i) =>
         i === index ? { ...fileData, category } : fileData
       );
-      console.log('newFilesData:', newFilesData);
       return newFilesData;
     });
   };
@@ -48,19 +46,10 @@ const FileUploader = () => {
   };
 
   const handleSubmit = async () => {
-
-    // const data = filesData.map((fileData) => ({
-    //   name: fileData.file.name,
-    //   category: fileData.category,
-    //   description: fileData.description,
-    // }));
-
     await uploadFilesThenCreateDocuments(filesData);
-
   };
 
   const allFilesHaveCategory = filesData.every((fileData) => fileData.category !== '');
-  console.log('allFilesHaveCategory:', allFilesHaveCategory);
 
   return (
     <>
