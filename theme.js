@@ -8,7 +8,7 @@ const theme = createTheme({
             styleOverrides: {
                 root: {
                     padding: '16px !important',
-                    verticalAlign: 'top !important'
+                    verticalAlign: 'middle !important'
                 },
             },
         },
