@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import FellowTable from './components/FellowTable.js';
 import HelloWorld from './components/HelloWorld.js';
-import MultiFileUpload from './components/MultiFileUploadTable/index.js';
+import MultiFileUploader from './components/MultiFileUploader/MultiFileUploader.js';
 
 const customComponents = {render: {}}
 
@@ -21,9 +21,9 @@ customComponents.render.helloWorld = function helloWorld(settings = { targetDiv 
   );
 }
 
-customComponents.render.multiFileUpload = function multiFileUpload(settings = { targetDiv }) {
+customComponents.render.multiFileUploader = function multiFileUploader(settings = { targetDiv }) {
   ReactDOM.render(
-    <MultiFileUpload />,
+    <MultiFileUploader />,
     document.getElementById(settings.targetDiv)
   );
 }
