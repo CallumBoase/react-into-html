@@ -9,11 +9,11 @@ KnackInitAsync = function($, callback) {
     loadScripts(scripts, callback, () => {console.log('error loading scripts')});
 }
 
-$(document).on('knack-scene-render.scene_53', function(event, scene){
+$(document).on('knack-view-render.view_79', function(event, view){
     console.log('scene_53')
     // $(`<div id='fellowTable'></div>`).appendTo(`#kn-${scene.key}`);
     // window.customComponents.render.fellowTable({targetDiv: 'fellowTable'});
-    $(`<div id='multiFileUploader'></div>`).appendTo(`#kn-${scene.key}`);
+    $(`<div style="width:100%" id='multiFileUploader'></div>`).insertAfter(`#${view.key}`);
     window.customComponents.render.multiFileUploader({targetDiv: 'multiFileUploader'})
 })
 
