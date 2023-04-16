@@ -11,23 +11,46 @@ When following online instructions in these circumstances you often run into fru
 * Imports between javascript files can get tricky in some circumstances, with CORS errors blocking access to scripts from different domains etc
 * If you don't have access to the server filesystem directly, it's tricky to install and use NPM packages (requiring CDNs etc which sometimes don't fully support all features)
 
-This library helps these problems, by providing a workable environment for developing react components that can be loaded into a static HTML pages via a single script tag (containing all required dependencies) and rendered into a target DIV as required.
+This library helps these problems, by providing some tooling and an environment for developing react components that can be loaded into a static HTML pages via a single script tag (containing all required dependencies) and rendered into a target DIV as required.
 
 ## Security
 * Note that all code you write and bundle using this library is CLIENT-SIDE! So don't include any sensitive information, API keys or similar!
 
 ## Setting up your development environment
-1. Fork this repo from github.com and open it in VS Studio Code.
-2. Open a terminal and run `NPM install` to install dependancies
+1. Make sure you have NPM installed on your local machine, and have access to a terminal (eg through VS Studio Code). 
+2. Fork this repo and save it your local machine.
+3. Open a terminal, navigate to the directory where you have the forked repo, and run `npm install`. This will install dependancies, including dev dependencies.
 
 ## Usage
 
-### Basics
-1. Open `customComponents_dev.js`. This file serves a similar purpose as the entry point for a normal react app (eg app.js), but is used slightly differently:
-    * We don't actually render any components directly. Instead, we write functions that can be called to render components. 
-    * The functions we declare are then saved to the browser window object
+### Basic example
+1. Open `customComponents_dev.js`. This file contains boilerplate code which you can modify and extend as needed. It  serves a similar purpose as the entry point for a normal react app (eg app.js), but is used slightly differently
+    * We don't actually render any components directly. Instead, we write functions that can be called later, which render components. 
+    * The functions we declare will be saved to the browser `window` object to be called on-demand from static html.
 
-2. Write a basic react component in `customComponents_dev.js` like so:
+```js
+//customComponents_dev.js
+
+//Import react and react-dom
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+//Declaring our customComponents variable which will be set to the window object at the end
+const customComponents = {render: {}}
+
+//Declaring functions that can be called to render our components
+customComponents.render.helloWorld = function hellowWorld(settings = { targetDiv }) {
+  ReactDOM.render(
+    //JSX code goes here
+    document.getElementById(settings.targetDiv)
+  );
+}
+
+//Adding the customComponents object to the browser window object when this file is run
+window.customComponents = customComponents;
+```
+
+2. Write some basic JSX code in place of `//JSX code goes here`, so your file now looks like this:
 ```js
 //customComponents_dev.js
 
@@ -51,9 +74,9 @@ customComponents.render.helloWorld = function hellowWorld(settings = { targetDiv
 //Adding the customComponents object to the browser window object when this file is run
 window.customComponents = customComponents;
 ```
-3. Once this is done, open a terminal and run `npm run build`. This will instruct webpack to compile `customComponents_dev.js` and all it's dependencies into a single file, and will also convert JSX code to browser-friendly code. The output will get stored in `./public/customComponents.js`
+3. Once this is done, open a terminal again, and run `npm run build`. This will instruct webpack to compile `customComponents_dev.js` and all it's dependencies into a single file, and will also convert JSX code to browser-friendly code. The output will get stored in `./public/customComponents.js`
 
-4. Now create a static html file. Load `./public/customComponents.js` in at the top, then create a target div and call the custom component from the window object using normal javascript. Open this in a browser and you should see "Hello world from react!" as a H1. (no need to run a server - just open the static html page).
+4. Now create a static html file. Load `./public/customComponents.js` in at the top, then create a target div and call the custom component from the window object using normal javascript. Open this in a browser and you should see "Hello world from react!" as a H1. (no need to run a server - just open the static html page directly in the browser).
 ```html
 <!DOCTYPE html>
 <html>
