@@ -25,37 +25,27 @@ import FellowTable from './Examples/example-components/FellowTable.js';
 import HelloWorld from './Examples/example-components/HelloWorld.js';
 import MultiFileUploader from './Examples/example-components/MultiFileUploader/MultiFileUploader.js';
 
-//Import MUI theme and styles
-import theme from './theme.js';
-import { ThemeProvider } from '@mui/material/styles';
-
 //Declaring our customComponents variable which will be set to the window object at the end
 const customComponents = {render: {}}
 
 //Declaring functions that can be called to render our components
 customComponents.render.fellowTable = function fellowTable(settings = { targetDiv }) {
   ReactDOM.render(
-    <ThemeProvider theme={theme}>
-      <FellowTable />
-    </ThemeProvider>,
+    <FellowTable />,
     document.getElementById(settings.targetDiv)
   );
 }
 
 customComponents.render.helloWorld = function helloWorld(settings = { targetDiv }) {
   ReactDOM.render(
-    <ThemeProvider theme={theme}>
-      <HelloWorld />
-    </ThemeProvider>,
+    <HelloWorld />,
     document.getElementById(settings.targetDiv)
   );
 }
 
 customComponents.render.multiFileUploader = function multiFileUploader(settings = { targetDiv }) {
   ReactDOM.render(
-    <ThemeProvider theme={theme}>
-      <MultiFileUploader />
-    </ThemeProvider>,
+    <MultiFileUploader />,
     document.getElementById(settings.targetDiv)
   );
 }

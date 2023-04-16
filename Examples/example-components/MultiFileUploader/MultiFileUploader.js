@@ -12,6 +12,10 @@ import { getMemberOptions } from './helpers/apiCalls.js';
 import getMultiChoiceOptionsFromKnackField from './helpers/getMultiChoiceOptionsFromKnackField.js';
 import { uploadFilesThenCreateDocuments } from './helpers/uploadFilesThenCreateDocuments.js';
 
+//Import MUI theme and styles
+import theme from './theme.js';
+import { ThemeProvider } from '@mui/material/styles';
+
 //Import some global info
 import globals from '../../../globals.js';
 
@@ -155,26 +159,29 @@ const FileUploader = () => {
   //We also run some logic to decide what to render
   //Eg {showFileInput && <input type="file" multiple onChange={updatedocumentsToCreate}/>}
   //  Means that the file input will only be rendered if the showFileInput variable is true
+  //We also include <ThemeProvider> for styling, as defined in the theme.js file
   return (
-    <>
-      {showFileInput && (
-        <input type="file" multiple onChange={updatedocumentsToCreate} />
-      )}
-      {files.length > 0 && (
-        <>
-          <EditableTable
-            props={props}
-          />
-          <SubmitButton isDisabled={!allFilesHaveCategory || isLoading} onClick={handleSubmit} />
-        </>
-      )}
-      {submitStatus === 'success' && (
-        <SuccessBanner handleReset={handleReset} />
-      )}
-      {submitStatus === 'error' && (
-        <ErrorBanner handleReset={handleReset} />
-      )}
-    </>
+    <ThemeProvider theme={theme}>
+      <>
+        {showFileInput && (
+          <input type="file" multiple onChange={updatedocumentsToCreate} />
+        )}
+        {files.length > 0 && (
+          <>
+            <EditableTable
+              props={props}
+            />
+            <SubmitButton isDisabled={!allFilesHaveCategory || isLoading} onClick={handleSubmit} />
+          </>
+        )}
+        {submitStatus === 'success' && (
+          <SuccessBanner handleReset={handleReset} />
+        )}
+        {submitStatus === 'error' && (
+          <ErrorBanner handleReset={handleReset} />
+        )}
+      </>
+    </ThemeProvider>
   );
 };
 
