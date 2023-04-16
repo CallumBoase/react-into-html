@@ -278,6 +278,9 @@ window.customComponents = customComponents;
 ## Local testing
 * For more information on testing your compiled components locally, see instructions in `./testing/readme_localTesting.md`
 
+## Globals.js
+In the root directory, you'll see a file called `globals.js`. This (or any other file you want) can be used to store global variables that might be used in all your components. There's nothing special about this file - anything you import into `customComponents_dev.js` will be including in your compiled code.
+
 ## Examples
 A few examples of components can be found in the `Examples/example-components` folder.
 
