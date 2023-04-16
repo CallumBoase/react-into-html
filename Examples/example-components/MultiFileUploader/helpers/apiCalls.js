@@ -1,12 +1,12 @@
 import axios from 'axios';
 import * as KnackAPI from 'knack-api-helper';
-import globals from '../../../globals.js';
+import globals from '../../../../globals.js';
 
 const kn = globals.Knack;
 
 const knackAPI = new KnackAPI({
   auth: 'view-based',
-  applicationId: globals.Knack.applicationId,
+  applicationId: kn.applicationId,
   userToken: window.Knack.getUserToken()
 });
 
@@ -15,12 +15,12 @@ export const uploadFile = async (fileData) => {
   formData.append('files', fileData.file);
 
   const response = await axios.post(
-    `https://api.knack.com/v1/applications/${globals.Knack.applicationId}/assets/file/upload`,
+    `https://api.knack.com/v1/applications/${kn.applicationId}/assets/file/upload`,
     formData,
     {
       headers: {
         'x-knack-rest-api-key': 'knack',
-        'x-knack-application-ID': globals.Knack.applicationId,
+        'x-knack-application-ID': kn.applicationId,
       },
     }
   );

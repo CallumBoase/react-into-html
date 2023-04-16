@@ -13,7 +13,7 @@ import getMultiChoiceOptionsFromKnackField from './helpers/getMultiChoiceOptions
 import { uploadFilesThenCreateDocuments } from './helpers/uploadFilesThenCreateDocuments.js';
 
 //Import some global info
-import globals from '../../globals.js';
+import globals from '../../../globals.js';
 
 //Shortcut to global variables
 const knackDocumentObjectFields = globals.Knack.objects.documents.fields;
