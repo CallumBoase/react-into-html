@@ -77,7 +77,7 @@ window.customComponents = customComponents;
 ```
 3. Once this is done, open a terminal again, and run `npm run build`. This will instruct webpack to compile `customComponents_dev.js` and all it's dependencies into a single file, and will also convert JSX code to browser-friendly code. The output will get stored in `./public/customComponents.js`
 
-4. Now navigate to `./testing/index.html`. We've included some basic boilerplate HTML showing how to load your custom component into a html page. The boilerplate will look like this. All it does right now is load the compiled `customComponent.js` in the `<head>`. We'll need to modify it to render our `helloWorld` component.
+4. Now navigate to `./testing/index.html`. This html file shows some basic boilerplate HTML. Currently, all it does is load the compiled `customComponent.js` in the `<head>`. We'll need to modify it to render our `helloWorld` component.
 
 ```html
 <!DOCTYPE html>
