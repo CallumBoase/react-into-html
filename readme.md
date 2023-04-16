@@ -6,12 +6,12 @@ It's often useful to render standalone React components onto static HTML website
 
 However, it's tricky to achieve this, especially when you don't have direct access to the server of the website you want to embed on (like in a Knack app or Squarespace).
 
-When following online instructions in these circumstances you often run into frustrating issues, especially when you don't have direct access to the server or terminal for the website you're adding the component to:
+When following online instructions for rendering react components on existing projects there can be frustrating issues:
 * JSX code cannot be run directly in the browser, it requires compiling to normal Javascript first (via Babel)
 * Imports between javascript files can get tricky in some circumstances, with CORS errors blocking access to scripts from different domains etc
 * If you don't have access to the server filesystem directly, it's tricky to install and use NPM packages (requiring CDNs etc which sometimes don't fully support all features)
 
-This library helps these problems, by providing some tooling and an environment for developing react components that can be loaded into a static HTML pages via a single script tag (containing all required dependencies) and rendered into a target DIV as required.
+This library helps these problems. It's basically some developer tooling and some boilerplate code for developing react components that can be loaded into a static HTML pages via a single script tag (containing all required dependencies) and rendered on-demand.
 
 ## Security
 * Note that all code you write and bundle using this library is CLIENT-SIDE! So don't include any sensitive information, API keys or similar!
