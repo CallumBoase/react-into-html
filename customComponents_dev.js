@@ -21,9 +21,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 //Import our custom components
-import FellowTable from './components/FellowTable.js';
-import HelloWorld from './components/HelloWorld.js';
-import MultiFileUploader from './components/MultiFileUploader/MultiFileUploader.js';
+import FellowTable from './Examples/example-components/FellowTable.js';
+import HelloWorld from './Examples/example-components/HelloWorld.js';
+import MultiFileUploader from './Examples/example-components/MultiFileUploader/MultiFileUploader.js';
 
 //Import MUI theme and styles
 import theme from './theme.js';

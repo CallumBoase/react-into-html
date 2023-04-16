@@ -278,6 +278,9 @@ window.customComponents = customComponents;
 ## Local testing
 * For more information on testing your compiled components locally, see instructions in `./testing/readme_localTesting.md`
 
+## Examples
+A few examples of components can be found in the `Examples/example-components` folder.
+
 ## Using the deployed script in a Knack app
 One common use-case is creating a React component to embed into a Knack app, to do more advanced functionality than natively available in Knack.
 
