@@ -115,38 +115,47 @@ import * as KnackAPI from 'knack-api-helper';
 import { styled } from '@mui/material/styles';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Skeleton } from '@mui/material';
 
+//Override default table styling - add !important - to avoid conflict with Knack CSS styling
+//We know the need to do this due to trial and error :)
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   padding: '16px !important'
 }));
 
+//Define our component which is called Advanced
 const Advanced = () => {
 
   const [isLoading, setIsLoading] = React.useState(true);
-  const [fellows, setFellows] = React.useState([]);
+  const [records, setRecords] = React.useState([]);
 
   React.useEffect(() => {
+
+    //Fetch data from the Knack API to display in our component
     const fetchData = async () => {
       const knackAPI = new KnackAPI({
-        applicationId: '63306ddbdfad5247a024eac3',
+        applicationId: '63306ddbdfad5247a024XXXX',
         auth: 'view-based'
       });
-      const fellows = await knackAPI.getMany({
+      const records = await knackAPI.getMany({
         scene: 'scene_161',
         view: 'view_490'
       });
-      setFellows(fellows.records);
+      setRecords(records.records);
       setIsLoading(false);
     };
     fetchData();
+
   }, []);
 
+  //JSX for our component:
+  //--While we wait for the API call, show skeleton loading of 10 table rows
+  //--Once the API call has returned records, show them in a table
   return (
     <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
             <StyledTableCell>Name</StyledTableCell>
-            <StyledTableCell>Cohort</StyledTableCell>
+            <StyledTableCell>Description</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -161,10 +170,10 @@ const Advanced = () => {
                   </StyledTableCell>
                 </TableRow>
               ))
-            : fellows.map(fellow => (
-                <TableRow key={fellow.id}>
-                  <StyledTableCell>{fellow.field_10}</StyledTableCell>
-                  <StyledTableCell>{fellow.field_447_raw}</StyledTableCell>
+            : records.map(record => (
+                <TableRow key={record.id}>
+                  <StyledTableCell>{record.field_10}</StyledTableCell>
+                  <StyledTableCell>{record.field_447_raw}</StyledTableCell>
                 </TableRow>
               ))}
         </TableBody>
@@ -242,7 +251,7 @@ window.customComponents = customComponents;
 * Anywhere that can serve a javascript file will do.
 
 ### Netlify hosting
-* One options is to set up Netlify site that imports your forked version of this repo and automatically publishes the `public` folder when you make a commit to the `main` branch.
+* One option is to set up Netlify site that imports your forked version of this repo and automatically publishes the `public` folder when you make a commit to the `main` branch.
 * A sample `netlify.toml` file to setup the build logic is included if you choose to use this method.
 * Full instructions on setting up Netlify auto-deploy from github are beyond the scope of this readme, but are easy to find online.
 
@@ -256,18 +265,18 @@ This section provides some basic instructions for writing React components to in
 
 ### Summary
 * Create your custom components and bundle them as outlined above.
-* Deploy your compiled script `customComponents.js` script somewhere on the web
-* Load your compiled script into the Knack app. This creates `window.customComponents` like normal
-* On a Knack scene or view render event, add a target div to the DOM with jQuery and then call `window.customComponents.yourComponent.render()` and point it at the div you created.
+* Deploy your compiled script ( `customComponents.js` ) somewhere on the web
+* Load your compiled script into the Knack app. This make your custom components available via `window.customComponents` like described above.
+* On a Knack scene or view render event, add a target div to the DOM and then call `window.customComponents.yourComponent.render()` and point it at the div you created. Your custom component should now render on the Knack page.
 
 <details>
-    <summary>Example code for Knack app Javascript area</summary>
+    <summary>Example code to use in Knack App javascript area</summary>
 
 ```js
-//Load your component code so it's available in the window object.
+//Load your compiled component script, so it's available in the window object.
+//This is the same as writing <script src="...customComponents.js"> into plain thml
 //KnackInitAsync blocks the app loading until callback() is run 
 //See https://docs.knack.com/docs/load-external-javascript-files
-//Prevents the app loading until you run callback()
 KnackInitAsync = function($, callback) {
 
     // REQUIRED: Explicitly include jQuery
@@ -331,4 +340,4 @@ const loadScripts = (scripts, onSuccess, onFailure) => {
 
 ### Local testing when using Knack.window object
 * When developing for Knack, you may want to use the `window.Knack` object in your component code, for example `window.Knack.getUserToken()` to get the logged in user's token to validate an API call. This means, your script can only be tested inside Knack, not locally.
-* You can simulate the `window.Knack` object for local testing as discussed in the readme `./testing/readme_localTesting.md`
+* This can become pretty annoying! It's possible to simulate the `window.Knack` object for local testing as discussed in the readme `./testing/readme_localTesting.md`
