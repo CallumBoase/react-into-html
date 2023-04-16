@@ -10,7 +10,7 @@ const CategoryDropdown = ({
 			displayEmpty
 			disabled={props.isDisabled}
 			value={rowProps.documentToCreate.category}
-			onChange={(event) => props.handleCategoryChange(rowProps.rowNum, event.target.value)}
+			onChange={(event) => props.handleValueChange(rowProps.rowNum, 'category', event.target.value)}
 		>
 			<MenuItem value="" disabled>
 				Category...

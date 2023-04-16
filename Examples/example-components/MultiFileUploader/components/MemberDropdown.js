@@ -10,7 +10,7 @@ const MemberDropdown = ({
 			displayEmpty
 			disabled={props.isDisabled}
 			value={rowProps.documentToCreate.member}
-			onChange={(event) => props.handleMemberChange(rowProps.rowNum, event.target.value)}
+			onChange={(event) => props.handleValueChange(rowProps.rowNum, 'member', event.target.value)}
 		>
 			<MenuItem value="" disabled>
 				Member...

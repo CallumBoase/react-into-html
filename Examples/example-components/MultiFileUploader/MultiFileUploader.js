@@ -64,7 +64,6 @@ const FileUploader = () => {
 
     //Update the files variable - get rid of the file corresponding to the removed row
     setFiles((prevFiles) => removeNthItemFromArray(Array.from(prevFiles), index));
-    console.log(files);
 
     //Update the documentsToCreate variable - get rid of the documentsToCreate corresponding to the removed row
     setDocumentsToCreate((prevDocumentsToCreate) => removeNthItemFromArray(prevDocumentsToCreate, index));
@@ -77,31 +76,11 @@ const FileUploader = () => {
     return array.filter((_, i) => i !== index);
   }
 
-  //When the user changes the category for a file, we need to update the documentsToCreate variable
-  const handleCategoryChange = (index, category) => {
+  //When a value in the editable table changes, update the documentsToCreate variable with new data
+  const handleValueChange = (index, column, value) => {
     setDocumentsToCreate((prevDocumentsToCreate) => {
       const newDocumentsToCreate = prevDocumentsToCreate.map((documentToCreate, i) =>
-        i === index ? { ...documentToCreate, category } : documentToCreate
-      );
-      return newDocumentsToCreate;
-    });
-  };
-
-  //When the user changes the member value a file, we need to update the documentsToCreate variable
-  const handleMemberChange = (index, member) => {
-    setDocumentsToCreate((prevDocumentsToCreate) => {
-      const newDocumentsToCreate = prevDocumentsToCreate.map((documentToCreate, i) =>
-        i === index ? { ...documentToCreate, member } : documentToCreate
-      );
-      return newDocumentsToCreate;
-    });
-  };
-
-  //When the user changes the description for a file, we need to update the documentsToCreate variable
-  const handleDescriptionChange = (index, description) => {
-    setDocumentsToCreate((prevDocumentsToCreate) => {
-      const newDocumentsToCreate = prevDocumentsToCreate.map((documentToCreate, i) =>
-        i === index ? { ...documentToCreate, description } : documentToCreate
+        i === index ? { ...documentToCreate, [column]: value } : documentToCreate
       );
       return newDocumentsToCreate;
     });
@@ -139,9 +118,7 @@ const FileUploader = () => {
     memberOptions,
     documentsToCreate,
     removeDocumentToCreate,
-    handleCategoryChange,
-    handleMemberChange,
-    handleDescriptionChange,
+    handleValueChange,
     handleSubmit,
     handleReset,
     isLoading,
