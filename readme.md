@@ -1,4 +1,5 @@
-# A library helping build react components for rending on static html pages
+# React For Static HTML
+A library to help you easily build react components for rendering on static html pages.
 
 ## Purpose
 It's often useful to render standalone React components onto static HTML websites. This is especially true when creating customised pages in website builders like Squarespace or in Knack apps.
