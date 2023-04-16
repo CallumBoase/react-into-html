@@ -1,3 +1,7 @@
+//Load your component code so it's available in the window object.
+//KnackInitAsync blocks the app loading until callback() is run 
+//See https://docs.knack.com/docs/load-external-javascript-files
+//Prevents the app loading until you run callback()
 KnackInitAsync = function($, callback) {
 
     // REQUIRED: Explicitly include jQuery
@@ -9,15 +13,13 @@ KnackInitAsync = function($, callback) {
     loadScripts(scripts, callback, () => {console.log('error loading scripts')});
 }
 
+//Adding our component after view_79, when view_79 renders
 $(document).on('knack-view-render.view_79', function(event, view){
-    console.log('scene_53')
-    // $(`<div id='fellowTable'></div>`).appendTo(`#kn-${scene.key}`);
-    // window.customComponents.render.fellowTable({targetDiv: 'fellowTable'});
-    $(`<div style="width:100%" id='multiFileUploader'></div>`).insertAfter(`#${view.key}`);
-    window.customComponents.render.multiFileUploader({targetDiv: 'multiFileUploader'})
+    $(`<div style="width:100%" id='helloWorld'></div>`).insertAfter(`#${view.key}`);
+    window.customComponents.render.helloWorld({targetDiv: 'helloWorld'})
 })
 
-//Helper function to load scripts
+//Helper function to load scripts into a Knack app
 const loadScripts = (scripts, onSuccess, onFailure) => {
     let loadedScripts = 0;
     let failedScripts = 0;

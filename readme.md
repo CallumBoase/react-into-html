@@ -12,6 +12,9 @@ When following online instructions in these circumstances you often run into fru
 
 This library helps these problems, by providing a workable environment for developing react components that can be loaded into a static HTML pages via a single script tag (containing all required dependencies) and rendered into a target DIV as required.
 
+## Security
+* Note that all code you write and bundle using this library is CLIENT-SIDE! So don't include any sensitive information, API keys or similar!
+
 ## Setting up your development environment
 1. Fork this repo from github.com and open it in VS Studio Code.
 2. Open a terminal and run `NPM install` to install dependancies
@@ -75,10 +78,13 @@ Of course, we're going to want to develop much more complex components. You're f
 Here is an example of a more involved component that uses the Material UI Component library.
 
 1. Install dependencies via terminal by running `npm install XXX` (where XXX is the package/s you want to install)
-2. Create a separate component file called `FellowTable.js` in the `components` folder. This component imports it's dependencies and exports the component for usage elsewhere.
+2. Create a separate component file eg `Advanced.js` in the `components` folder. Write an advanced component as required, including importing dependencies and exporting the component for usage elsewhere.
+
+<details>
+    <summary>Example code for Advanced.JS inside here</summary>
 
 ```js
-// ./components/Fellowtable.js
+// ./components/Advanced.js
 
 import React from 'react';
 import * as KnackAPI from 'knack-api-helper';
@@ -89,7 +95,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   padding: '16px !important'
 }));
 
-const FellowTable = () => {
+const Advanced = () => {
 
   const [isLoading, setIsLoading] = React.useState(true);
   const [fellows, setFellows] = React.useState([]);
@@ -143,9 +149,12 @@ const FellowTable = () => {
   );
 };
 
-export default FellowTable;
+export default Advanced;
 
 ```
+
+</details>
+<br>
 
 3. Import the component into `customComponents_dev.js`. Notice how we still have our original helloWorld component - you can define multiple components to be called on-demand.
 
@@ -157,7 +166,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 //Import our custom components
-import FellowTable from './components/FellowTable.js';
+import Advanced from './components/Advanced.js';
 
 //Declaring our customComponents variable which will be set to the window object at the end
 const customComponents = {render: {}}
@@ -172,9 +181,9 @@ customComponents.render.helloWorld = function hellowWorld(settings = { targetDiv
   );
 }
 
-customComponents.render.fellowTable = function fellowTable(settings = { targetDiv }) {
+customComponents.render.advanced = function advanced(settings = { targetDiv }) {
   ReactDOM.render(
-    <FellowTable />,
+    <Advanced />,
     document.getElementById(settings.targetDiv)
   );
 }
@@ -197,35 +206,105 @@ window.customComponents = customComponents;
     <script>
       window.customComponents.render.helloWorld({targetDiv: 'helloWorld'});
     </script>
-    <div id="fellowTable"></div>
+    <div id="advanced"></div>
     <script>
-      window.customComponents.render.fellowTable({targetDiv: 'fellowTable'});
+      window.customComponents.render.advanced({targetDiv: 'advanced'});
     </script>
   </body>
 </html>
 ```
 ## Deploying compiled code
 * Once `./public/customComponents.js` has been compiled, you're free to serve it somewhere on the web, and import it into existing projects as required.
+* Anywhere that can serve a javascript file will do.
 
-### Netlify
-* You could set up Netlify site that imports your forked version of this repo and automatically publishes the `public` folder when you make a commit to the `main` branch.
-* A sample `netlify.toml` file is included for this purpose.
+### Netlify hosting
+* One options is to set up Netlify site that imports your forked version of this repo and automatically publishes the `public` folder when you make a commit to the `main` branch.
+* A sample `netlify.toml` file to setup the build logic is included if you choose to use this method.
 * Full instructions on setting up Netlify auto-deploy from github are beyond the scope of this readme, but are easy to find online.
 
-### Deploying somewhere else
-* You don't need to deploy to Netlify. Anywhere that can host a javascript file will do.
+## Local testing
+* You can test your compiled components locally. See instructions in `./testing/readme_localTesting.md`
 
-## Using the deployed in a Knack app
+## Using the deployed script in a Knack app
+One common use-case is creating a React component to embed into a Knack app, to do more advanced functionality than natively available in Knack.
+
+This section provides some basic instructions for writing React components to include in Knack.
+
+### Summary
+* Create your custom components and bundle them as outlined above.
+* Deploy your compiled script `customComponents.js` script somewhere on the web
+* Load your compiled script into the Knack app. This creates `window.customComponents` like normal
+* On a Knack scene or view render event, add a target div to the DOM with jQuery and then call `window.customComponents.yourComponent.render()` and point it at the div you created.
+
+<details>
+    <summary>Example code for Knack app Javascript area</summary>
+
+```js
+//Load your component code so it's available in the window object.
+//KnackInitAsync blocks the app loading until callback() is run 
+//See https://docs.knack.com/docs/load-external-javascript-files
+//Prevents the app loading until you run callback()
+KnackInitAsync = function($, callback) {
+
+    // REQUIRED: Explicitly include jQuery
+    window.$ = $;
+
+    const scripts = [
+        {src: 'https://extraordinary-khapse-4c4e7c.netlify.app/customComponents.js'}
+    ]
+    loadScripts(scripts, callback, () => {console.log('error loading scripts')});
+}
+
+//Adding our component after view_79, when view_79 renders
+$(document).on('knack-view-render.view_79', function(event, view){
+    $(`<div style="width:100%" id='helloWorld'></div>`).insertAfter(`#${view.key}`);
+    window.customComponents.render.helloWorld({targetDiv: 'helloWorld'})
+})
+
+//Helper function to load scripts into a Knack app
+const loadScripts = (scripts, onSuccess, onFailure) => {
+    let loadedScripts = 0;
+    let failedScripts = 0;
+
+    if(typeof onSuccess !== 'function'){
+        onSuccess = function(){
+            console.log('Scripts loaded');
+        }
+    }
+
+    if(typeof onFailure !== 'function'){
+        onFailure = function(){
+            console.error('Failed to load scripts');
+        }
+    }
+
+    scripts.forEach(({ src, type }) => {
+        const script = document.createElement('script');
+        script.src = src;
+        if (type) {
+            script.type = type;
+        }
+
+        script.addEventListener('load', () => {
+            loadedScripts++;
+            if (loadedScripts === scripts.length) {
+                onSuccess();
+            }
+        });
+
+        script.addEventListener('error', () => {
+            failedScripts++;
+            onFailure();
+        });
+
+        document.body.appendChild(script);
+    });
+};
+```
+
+</details>
+<br>
 
 ### Local testing when using Knack.window object
-
-## Netlify auto-deploying
-new commits to the MAIN branch of this (original) repo will trigger an auto-deploy of the DIST folder to Netlify.
-Netlify will NOT run `npm run build` during deployment, so make sure you have run this before pushing to github.
-
-## Why?
-If you want to add a react component to a HTML page (like in a Knack app) this is useful.
-
-Compiling it like this means you can develop in React using normal conventions, and then compile it into a single script file where you custom components can be rendered on a static HTML page on-demand.
-
-Doing it this way, we avoid a bunch of complexity from other methods, including browsers being unable to render JSX, cross origin issues of import statements in script tags etc. It becomes quite maintainable.
+* When developing for Knack, you may want to use the `window.Knack` object in your component code, for example `window.Knack.getUserToken()` to get the logged in user's token to validate an API call. This means, your script can only be tested inside Knack, not locally.
+* You can simulate the `window.Knack` object for local testing as discussed in the readme `./testing/readme_localTesting.md`
