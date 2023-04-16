@@ -245,7 +245,7 @@ customComponents.render.advanced = function advanced(settings = { targetDiv }) {
 window.customComponents = customComponents;
 ```
 4. In terminal, run `npm run build` to compile into the browser-friendly file `./public/customComponents.js`.
-5. Create a html file like before, but this time we can call multiple components on-demand
+5. Modify `index.html`. This time we can call multiple components on-demand
 
 ```html
 <!DOCTYPE html>
@@ -271,12 +271,12 @@ window.customComponents = customComponents;
 * Anywhere that can serve a javascript file will do.
 
 ### Netlify hosting
-* One option is to set up Netlify site that imports your forked version of this repo and automatically publishes the `public` folder when you make a commit to the `main` branch.
-* A sample `netlify.toml` file to setup the build logic is included if you choose to use this method.
+* One option is to set up Netlify site with auto-deploy of the `public` folder from the `main` branch of your github repo.
+* A sample `netlify.toml` file to setup this build logic is included if you choose to use this method.
 * Full instructions on setting up Netlify auto-deploy from github are beyond the scope of this readme, but are easy to find online.
 
 ## Local testing
-* You can test your compiled components locally. See instructions in `./testing/readme_localTesting.md`
+* For more information on testing your compiled components locally, see instructions in `./testing/readme_localTesting.md`
 
 ## Using the deployed script in a Knack app
 One common use-case is creating a React component to embed into a Knack app, to do more advanced functionality than natively available in Knack.
@@ -286,7 +286,7 @@ This section provides some basic instructions for writing React components to in
 ### Summary
 * Create your custom components and bundle them as outlined above.
 * Deploy your compiled script ( `customComponents.js` ) somewhere on the web
-* Load your compiled script into the Knack app. This make your custom components available via `window.customComponents` like described above.
+* Load the script from wherever you're serving it on the we, into your Knack app. This make your custom components available via `window.customComponents` like described above.
 * On a Knack scene or view render event, add a target div to the DOM and then call `window.customComponents.yourComponent.render()` and point it at the div you created. Your custom component should now render on the Knack page.
 
 <details>
