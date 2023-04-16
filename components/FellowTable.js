@@ -7,7 +7,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   padding: '16px !important'
 }));
 
-
 const FellowTable = () => {
 
   const [isLoading, setIsLoading] = React.useState(true);
