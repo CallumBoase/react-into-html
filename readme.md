@@ -25,11 +25,12 @@ This library helps these problems. It's basically some developer tooling and som
 
 ### Basic example
 1. Open `customComponents_dev.js`. This file contains boilerplate code which you can modify and extend as needed. It  serves a similar purpose as the entry point for a normal react app (eg app.js), but is used slightly differently
-    * We don't actually render any components directly. Instead, we write functions that can be called later, which render components. 
+    * We don't actually render any components directly. Instead, we write functions that can be called later. When called, these functions render react components. 
     * The functions we declare will be saved to the browser `window` object to be called on-demand from static html.
 
 ```js
 //customComponents_dev.js
+//This is how it will look when you first open it
 
 //Import react and react-dom
 import React from 'react';
@@ -76,7 +77,23 @@ window.customComponents = customComponents;
 ```
 3. Once this is done, open a terminal again, and run `npm run build`. This will instruct webpack to compile `customComponents_dev.js` and all it's dependencies into a single file, and will also convert JSX code to browser-friendly code. The output will get stored in `./public/customComponents.js`
 
-4. Now create a static html file. Load `./public/customComponents.js` in at the top, then create a target div and call the custom component from the window object using normal javascript. Open this in a browser and you should see "Hello world from react!" as a H1. (no need to run a server - just open the static html page directly in the browser).
+4. Now navigate to `./testing/index.html`. We've included some basic boilerplate HTML showing how to load your custom component into a html page. The boilerplate will look like this. All it does right now is load the compiled `customComponent.js` in the `<head>`. We'll need to modify it to render our `helloWorld` component.
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="../public/customComponents.js"></script>
+  </head>
+  <body>
+    <!-- create div and render component into it here -->
+  </body>
+</html>
+
+```
+5. Now, let's modify it to create a `div` called `helloWorld` and then render our `helloWorld` component into that div from the `window` object:
+
 ```html
 <!DOCTYPE html>
 <html>
@@ -93,6 +110,9 @@ window.customComponents = customComponents;
 </html>
 
 ```
+
+6. Now, open `index.html` in a browser and you should see the hello world component rendered. (No need to run a server, just open index.html directly in the browser).
+
 ### More advanced components
 Of course, we're going to want to develop much more complex components. You're free to do this just like you would in a normal react app now including:
 * Install and using NPM packages
