@@ -58,7 +58,7 @@
         showSpinner: () => {console.log('showSpinner')},
         hideSpinner: () => {console.log('hideSpinner')},
         fields: {
-            field_30: {//The field_key of your category field in the fileUploads object
+            field_30: {//Change this to the field_key of your category field in the fileUploads object
                 attributes: {
                     type: 'multiple_choice',
                     format: {
