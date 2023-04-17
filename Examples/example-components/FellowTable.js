@@ -15,7 +15,7 @@ const FellowTable = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       const knackAPI = new KnackAPI({
-        applicationId: '63306ddbdfad5247a024eac3',
+        applicationId: 'XXXXXXXXXXXXXXXXXXXXXX',
         auth: 'view-based'
       });
       const fellows = await knackAPI.getMany({

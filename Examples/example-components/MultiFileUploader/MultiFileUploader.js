@@ -17,7 +17,7 @@ import theme from './theme.js';
 import { ThemeProvider } from '@mui/material/styles';
 
 //Import some global info
-import globals from '../../../globals.js';
+import globals from './globals.js';
 
 //Shortcut to global variables
 const knackDocumentObjectFields = globals.Knack.objects.documents.fields;
