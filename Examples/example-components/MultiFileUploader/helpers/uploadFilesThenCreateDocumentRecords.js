@@ -1,9 +1,9 @@
 import { uploadFile, addNewDocumentRecord } from './apiCalls.js';
 
-export const uploadFilesThenCreateDocuments = async (documentsToCreate) => {
-	const uploadPromises = documentsToCreate.map(async (documentToCreate) => {
-		const uploadResult = await uploadFile(documentToCreate);
-		await addNewDocumentRecord(uploadResult, documentToCreate);
+export const uploadFilesThenCreateDocumentRecords = async (records) => {
+	const uploadPromises = records.map(async (record) => {
+		const uploadResult = await uploadFile(record);
+		await addNewDocumentRecord(uploadResult, record);
 	});
 
 	const results = await Promise.allSettled(uploadPromises);

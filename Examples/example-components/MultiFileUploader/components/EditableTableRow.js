@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 const EditableTableRow = ({
 	props,
-	rowProps
+	row
 }) => {
 	return (
 		<TableRow>
@@ -13,15 +13,15 @@ const EditableTableRow = ({
 				switch (column.type) {
 
 					case 'readOnly':
-						return <TableCell key={column.key}>{documentToCreate[column.key]}</TableCell>
+						return <TableCell key={column.key}>{row.record[column.key]}</TableCell>
 
 					case 'select':
 						return <TableCell key={column.key}>
 							<Select
 								displayEmpty
 								disabled={props.isDisabled}
-								value={documentToCreate[column.key]}
-								onChange={(event) => props.handleValueChange(rowProps.rowNum, column.key, event.target.value)}
+								value={row.record[column.key]}
+								onChange={(event) => props.handleValueChange(row.rowNum, column.key, event.target.value)}
 							>
 								<MenuItem value="" disabled>
 									{column.label}...
@@ -41,15 +41,15 @@ const EditableTableRow = ({
 									multiline
 									minRows={1}
 									disabled={props.isDisabled}
-									value={documentToCreate[column.key]}
-									onChange={(event) => props.handleValueChange(rowProps.rowNum, column.key, event.target.value)}
+									value={row.record[column.key]}
+									onChange={(event) => props.handleValueChange(row.rowNum, column.key, event.target.value)}
 								/>
 							</TableCell>
 						)
 				}
 			})}
 			<TableCell>
-				<IconButton onClick={() => props.handleRemoveRow(rowProps.rowNum)} disabled={props.isDisabled}>
+				<IconButton onClick={() => props.handleRemoveRow(row.rowNum)} disabled={props.isDisabled}>
 					<CloseIcon />
 				</IconButton>
 			</TableCell>

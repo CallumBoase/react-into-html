@@ -17,11 +17,11 @@ const EditableTable = ({
         </TableRow>
       </TableHead>
       <TableBody>
-        {props.documentsToCreate.map((documentToCreate, rowNum) => (
+        {props.records.map((record, rowNum) => (
           <EditableTableRow
             key={rowNum}
             props={props}
-            rowProps={{rowNum, documentToCreate}}
+            row={{rowNum, record}}
           />
         ))}
       </TableBody>

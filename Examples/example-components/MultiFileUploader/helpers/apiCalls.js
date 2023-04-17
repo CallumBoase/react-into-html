@@ -10,16 +10,14 @@ const knackAPI = new KnackAPI({
   userToken: window.Knack.getUserToken()
 });
 
-export const uploadFile = async (documentToCreate) => {
+export const uploadFile = async (records) => {
 
   const formData = new FormData();
 
-  const extension = documentToCreate.file.name.split('.').pop();
-  const newFileName = documentToCreate.newFileName && documentToCreate.newFileName.length > 0 ? documentToCreate.newFileName : null;
-
-  const fileName = newFileName ? `${newFileName}.${extension}` : documentToCreate.file.name;
-
-  formData.append('files', documentToCreate.file, fileName);
+  const fileExtension = records.file.name.split('.').pop();
+  const newFileName = records.newFileName && records.newFileName.length > 0 ? records.newFileName : null;
+  const fileName = newFileName ? `${newFileName}.${fileExtension}` : records.file.name;
+  formData.append('files', records.file, fileName);
 
   const response = await axios.post(
     `https://api.knack.com/v1/applications/${kn.applicationId}/assets/file/upload`,
@@ -35,13 +33,13 @@ export const uploadFile = async (documentToCreate) => {
 
 };
 
-export const addNewDocumentRecord = async (uploadResult, documentToCreate) => {
+export const addNewDocumentRecord = async (uploadResult, records) => {
 
   const body = {}
   body[kn.objects.documents.fields.file] = uploadResult.id;
-  body[kn.objects.documents.fields.category] = documentToCreate.category;
-  body[kn.objects.documents.fields.member] = [documentToCreate.member];
-  body[kn.objects.documents.fields.description] = documentToCreate.description;
+  body[kn.objects.documents.fields.category] = records.category;
+  body[kn.objects.documents.fields.member] = [records.member];
+  body[kn.objects.documents.fields.description] = records.description;
 
   const result = await knackAPI.post({
     scene: 'scene_55',

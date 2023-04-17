@@ -10,7 +10,7 @@ import ErrorBanner from './components/ErrorBanner.js';
 //Import some helper functions related to API calls
 import { getMemberOptions } from './helpers/apiCalls.js';
 import getMultiChoiceOptionsFromKnackField from './helpers/getMultiChoiceOptionsFromKnackField.js';
-import { uploadFilesThenCreateDocuments } from './helpers/uploadFilesThenCreateDocuments.js';
+import { uploadFilesThenCreateDocumentRecords } from './helpers/uploadFilesThenCreateDocumentRecords.js';
 
 //Import MUI theme and styles
 import theme from './theme.js';
@@ -55,7 +55,7 @@ const FileUploader = () => {
   //Defining state variables
   //Each time a state variable changes, the virtual DOM will re-render
   const [dropdownOptions, setDropdownOptions] = useState({});
-  const [documentsToCreate, setDocumentsToCreate] = useState([]);
+  const [records, setRecords] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
@@ -67,53 +67,53 @@ const FileUploader = () => {
     }, [])
   });
 
-  //When the file input changes, we create a documentToCreate object for each file, with starting values for each column
+  //When the file input changes, we create a record object for each file, with starting values for each column
   const handleFileInputChange = (event) => {
 
-    setDocumentsToCreate(Array.from(event.target.files).map((file) => {
+    setRecords(Array.from(event.target.files).map((file) => {
 
       //We always include the uploaded file under key 'file'
-      let documentToCreate = { file: file };
+      let record = { file: file };
 
       //For each column, we need to set the value of the corresponding key
       columns.forEach((column) => {
 
         //Special case: value is file.name, then set it to file name
         if (column.value === 'file.name') {
-          documentToCreate[column.key] = file.name;
+          record[column.key] = file.name;
         } else {
-          documentToCreate[column.key] = column.value || '';
+          record[column.key] = column.value || '';
         }
 
       });
 
-      return documentToCreate;
+      return record;
 
     }));
   };
 
-  //When the user clicks the remove button on a row, we need to update the files and documentsToCreate variables
+  //When the user clicks the remove button on a row, we need to update the files and records variables
   const handleRemoveRow = (index) => {
-    setDocumentsToCreate((prevDocumentsToCreate) => removeNthItemFromArray(prevDocumentsToCreate, index));
+    setRecords((prevRecords) => removeNthItemFromArray(prevRecords, index));
   };
 
-  //When a value in the editable table changes, update the documentsToCreate variable with new data
+  //When a value in the editable table changes, update the records variable with new data
   const handleValueChange = (index, column, value) => {
-    setDocumentsToCreate((prevDocumentsToCreate) => {
-      const newDocumentsToCreate = prevDocumentsToCreate.map((documentToCreate, i) =>
-        i === index ? { ...documentToCreate, [column]: value } : documentToCreate
+    setRecords((prevRecords) => {
+      const newRecords = prevRecords.map((record, i) =>
+        i === index ? { ...record, [column]: value } : record
       );
-      return newDocumentsToCreate;
+      return newRecords;
     });
   };
 
-  //When a user clicks the submit button, we run API calls to upload the files and create the document records
+  //When a user clicks the submit button, we run API calls to upload the files and create the records
   //Depending on the result of this, we update the submitStatus variable to 'success' or 'error'
   //We also reset the files state variable to an empty array, which hides the table.
   const handleSubmit = async () => {
     setIsLoading(true);
     Knack.showSpinner();
-    const results = await uploadFilesThenCreateDocuments(documentsToCreate);
+    const results = await uploadFilesThenCreateDocumentRecords(records);
     if (results.failed === 0) {
       setSubmitStatus('success');
     } else {
@@ -121,14 +121,14 @@ const FileUploader = () => {
     }
     setIsLoading(false);
     Knack.hideSpinner();
-    setDocumentsToCreate([]);
+    setRecords([]);
   };
 
   //When the user clicks a button that runs handleReset
   //We reset the values needed to re-render the virtual DOM in it's starting state
   //This means the table and banners are gone, and the file input is visible again
   const handleReset = () => {
-    setDocumentsToCreate([]);
+    setRecords([]);
     setSubmitStatus(null);
   };
 
@@ -136,8 +136,8 @@ const FileUploader = () => {
   const props = {
     columns,
     dropdownOptions,
-    documentsToCreate,
-    removeDocumentToCreate: handleRemoveRow,
+    records,
+    handleRemoveRow,
     handleValueChange,
     handleSubmit,
     handleReset,
@@ -148,14 +148,14 @@ const FileUploader = () => {
   //Some variables to help deciding what to render
   //These will recalculate every time the component re-renders
   
-  const allMandatoryFieldsFilled = documentsToCreate.every((documentToCreate) => {
+  const allMandatoryFieldsFilled = records.every((record) => {
     const filled = columns.filter(column => column.mandatory).every((column) => {
-      return documentToCreate[column.key] !== '';
+      return record[column.key] !== '';
     });
     return filled;
   });
   
-  const showFileInput = documentsToCreate.length === 0 && submitStatus === null;
+  const showFileInput = records.length === 0 && submitStatus === null;
 
   //The actual component JSX that gets rendered
   return (
@@ -164,7 +164,7 @@ const FileUploader = () => {
         {showFileInput && (
           <input type="file" multiple onChange={handleFileInputChange} />
         )}
-        {documentsToCreate.length > 0 && (
+        {records.length > 0 && (
           <>
             <EditableTable
               props={props}
