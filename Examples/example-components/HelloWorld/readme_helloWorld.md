@@ -45,6 +45,6 @@ This is a very basic component. It's just to demonstrate the most basic method o
     </html>
     ```
 
-3. In a terminal, run `npm run build` to render your components into a single, browser-friendly file.
+3. In a terminal, run `npm run build` to compile your components into a single, browser-friendly file.
 
 4. Open `./localTesting/index.html` in a browser. You should now see hello world rendered on the page from your custom component.
