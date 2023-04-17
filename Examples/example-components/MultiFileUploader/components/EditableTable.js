@@ -3,22 +3,16 @@ import React from 'react';
 import { TableRow, TableCell, Table, TableBody, TableHead } from '@mui/material';
 import EditableTableRow from './EditableTableRow.js';
 
-const columns = [
-  { label: 'File' },
-  { label: 'Category' },
-  { label: 'Member' },
-  { label: 'Description' }
-]
-
 const EditableTable = ({
   props
 }) => {
+  console.log(props);
   return (
     <Table>
       <TableHead>
         <TableRow>
-          {columns.map((column) => (
-            <TableCell>{column.label}</TableCell>
+          {props.columns.map((column) => (
+            <TableCell key={column.key}>{column.label}</TableCell>
           ))}
           <TableCell key="Remove" />
         </TableRow>

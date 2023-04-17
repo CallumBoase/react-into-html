@@ -22,41 +22,87 @@ import globals from '../../../globals.js';
 //Shortcut to global variables
 const knackDocumentObjectFields = globals.Knack.objects.documents.fields;
 
+async function fetchCategories() {
+  return await getMultiChoiceOptionsFromKnackField(knackDocumentObjectFields.category);
+}
+
+async function fetchMembers() {
+  return await getMemberOptions();
+}
+
+//Not allowed: key file
+const columns = [
+  { label: 'File', key: 'fileName', type: 'readOnly', value: 'file.name'},//This will receive val of file state
+  { label: 'Category', key: 'category', type: 'select', dropdownOptions: fetchCategories },
+  { label: 'Member', key: 'member', type: 'select', dropdownOptions: fetchMembers },
+  { label: 'New', key: 'new', type: 'select', dropdownOptions: ['123', '234', '345'] },
+  { label: 'Description', key: 'description', type: 'text' }
+]
 
 //Define our component
-const FileUploader = () => {
+const FileUploader = () => {  
 
   //Defining state variables
   //Each time a state variable changes, the virtual DOM will re-render
   const [files, setFiles] = useState([]);
-  const [categoryOptions, setCategoryOptions] = useState([]);
-  const [memberOptions, setMemberOptions] = useState([]);
+  const [dropdownOptions, setDropdownOptions] = useState({});
   const [documentsToCreate, setDocumentsToCreate] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
-  //Defining our useEffect hooks
-  //These are called when the component mounts and when the state variables change
+  columns.forEach(column => {
 
-  //Fetch the category options from Knack window object
-  useEffect(() => {
-    const categories = getMultiChoiceOptionsFromKnackField(knackDocumentObjectFields.category);
-    setCategoryOptions(categories);
-  }, []);
+    //Only needed for column type = select
+    if(column.type !== 'select') return;
 
-  //Fetch the member options from Knack API
-  useEffect(() => {
-    const fetchMemberOptions = async () => {
-      const members = await getMemberOptions();
-      setMemberOptions(members);
-    };
-    fetchMemberOptions();
-  }, []);
+    //Set up the dropdown options for each <select> column
+    if (Array.isArray(column.dropdownOptions)) {
+
+      useEffect(() => {
+        const optionsFormatted = formatDropdownOptions(column.dropdownOptions);
+        setDropdownOptions((prevDropdownOptions) => ({ ...prevDropdownOptions, [column.key]: optionsFormatted }));
+      }, []);
+
+    } else if (typeof column.dropdownOptions === 'function') {
+
+      useEffect(() => {
+        const fetchOptions = async () => {
+          const options = await column.dropdownOptions();
+          const optionsFormatted = formatDropdownOptions(options);
+          setDropdownOptions((prevDropdownOptions) => ({ ...prevDropdownOptions, [column.key]: optionsFormatted }));
+
+        };
+        fetchOptions();
+      }, []);
+
+    }
+  })
 
   //When the file input changes, we need to update the files and documentsToCreate variables
   const updatedocumentsToCreate = (event) => {
     setFiles(event.target.files);
-    setDocumentsToCreate(Array.from(event.target.files).map((file) => ({ file, category: '', description: '', member: '' })));
+    setDocumentsToCreate(Array.from(event.target.files).map((file) => {
+
+      //We always include the uploaded file under key 'file'
+      let documentToCreate = {file: file};
+
+      //We need to create a documentToCreate object for each file
+      //Each documentToCreate object needs to have the file value, and empty string for each other column
+      //We use the column key to determine the name of the property
+      columns.forEach((column) => {
+
+        //Special case: value is file.name, then set it to file name
+        if(column.value === 'file.name'){
+          documentToCreate[column.key] = file.name;
+        } else {
+          documentToCreate[column.key] = '';
+        }
+
+      });
+
+      return documentToCreate;
+
+    }));
   };
 
   //When the user clicks the remove button, we need to update the files and documentsToCreate variables
@@ -113,9 +159,9 @@ const FileUploader = () => {
   };
 
   const props = {
+    columns,
     files,
-    categoryOptions,
-    memberOptions,
+    dropdownOptions,
     documentsToCreate,
     removeDocumentToCreate,
     handleValueChange,
@@ -164,3 +210,23 @@ const FileUploader = () => {
 
 //Export out component
 export default FileUploader;
+
+function formatDropdownOptions(options) {
+
+  let optionsFormatted;
+
+  //Format the options into {id: 'string', identifier: 'string'} objects when possible
+  if (options.length && options[0].id && options[0].identifier) {
+    //Nothing required - it's already formatted correctly
+    optionsFormatted = options;
+  } else if (options.length && typeof options[0] === 'string') {
+    //Set ID and identifier to the same value
+    optionsFormatted = options.map(option => ({ id: option, identifier: option }));
+  } else {
+    //Unknown format - throw an error
+    throw new Error('dropdownOptions must be an array of strings or an array of objects with id and identifier properties');
+  }
+
+  return optionsFormatted;
+
+}
