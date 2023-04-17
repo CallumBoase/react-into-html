@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as KnackAPI from 'knack-api-helper';
-import globals from '../../../../globals.js';
+import globals from '../globals.js';
 
 const kn = globals.Knack;
 
@@ -33,17 +33,17 @@ export const uploadFile = async (records) => {
 
 };
 
-export const addNewDocumentRecord = async (uploadResult, records) => {
+export const addNewFileUploadRecord = async (uploadResult, records) => {
 
   const body = {}
-  body[kn.objects.documents.fields.file] = uploadResult.id;
-  body[kn.objects.documents.fields.category] = records.category;
-  body[kn.objects.documents.fields.member] = [records.member];
-  body[kn.objects.documents.fields.description] = records.description;
+  body[kn.objects.fileUploads.fields.file] = uploadResult.id;
+  body[kn.objects.fileUploads.fields.category] = records.category;
+  body[kn.objects.fileUploads.fields.member] = [records.member];
+  body[kn.objects.fileUploads.fields.description] = records.description;
 
   const result = await knackAPI.post({
-    scene: 'scene_55',
-    view: 'view_78',
+    scene: kn.objects.fileUploads.addFileUploadForm.scene,
+    view: kn.objects.fileUploads.addFileUploadForm.view,
     body
   });
   return result;
@@ -53,8 +53,8 @@ export const addNewDocumentRecord = async (uploadResult, records) => {
 export const getMemberOptions = async () => {
 
   const results = await knackAPI.getMany({
-    scene: 'scene_55',
-    view: 'view_82',
+    scene: kn.objects.members.gridOfMembers.scene,
+    view: kn.objects.members.gridOfMembers.view,
     format: 'raw'
   });
   const members = results.records.map((record) => {

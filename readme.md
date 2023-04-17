@@ -113,103 +113,9 @@ window.customComponents = customComponents;
 
 6. Now, open `index.html` in a browser and you should see the hello world component rendered. (No need to run a server, just open index.html directly in the browser).
 
-### More advanced components
-Of course, we're going to want to develop much more complex components. You're free to do this just like you would in a normal react app now including:
-* Install and using NPM packages
-* Writing code in separate files and using `import` and `export` statements to re-use code between different files
-* Writing JSX code
-
-Here is an example of a more involved component that uses the Material UI Component library.
-
-1. Install dependencies via terminal by running `npm install XXX` (where XXX is the package/s you want to install)
-2. Create a separate component file eg `Advanced.js` in the `components` folder. Write an advanced component as required, including importing dependencies and exporting the component for usage elsewhere.
-
-<details>
-    <summary>Example code for Advanced.JS inside here</summary>
-
-```js
-// ./components/Advanced.js
-
-import React from 'react';
-import * as KnackAPI from 'knack-api-helper';
-import { styled } from '@mui/material/styles';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Skeleton } from '@mui/material';
-
-//Override default table styling - add !important - to avoid conflict with Knack CSS styling
-//We know the need to do this due to trial and error :)
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  padding: '16px !important'
-}));
-
-//Define our component which is called Advanced
-const Advanced = () => {
-
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [records, setRecords] = React.useState([]);
-
-  React.useEffect(() => {
-
-    //Fetch data from the Knack API to display in our component
-    const fetchData = async () => {
-      const knackAPI = new KnackAPI({
-        applicationId: '63306ddbdfad5247a024XXXX',
-        auth: 'view-based'
-      });
-      const records = await knackAPI.getMany({
-        scene: 'scene_161',
-        view: 'view_490'
-      });
-      setRecords(records.records);
-      setIsLoading(false);
-    };
-    fetchData();
-
-  }, []);
-
-  //JSX for our component:
-  //--While we wait for the API call, show skeleton loading of 10 table rows
-  //--Once the API call has returned records, show them in a table
-  return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>Name</StyledTableCell>
-            <StyledTableCell>Description</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {isLoading
-            ? Array.from(new Array(10)).map((_, index) => (
-                <TableRow key={index}>
-                  <StyledTableCell>
-                    <Skeleton />
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    <Skeleton />
-                  </StyledTableCell>
-                </TableRow>
-              ))
-            : records.map(record => (
-                <TableRow key={record.id}>
-                  <StyledTableCell>{record.field_10}</StyledTableCell>
-                  <StyledTableCell>{record.field_447_raw}</StyledTableCell>
-                </TableRow>
-              ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-};
-
-export default Advanced;
-
-```
-
-</details>
-<br>
-
-3. Import the component into `customComponents_dev.js`. Notice how we still have our original helloWorld component - you can define multiple components to be called on-demand.
+### Multiple components in the window object
+It's possible to add multiple different components to the window object, by adding each of them to `customComponents_dev.js`.
+Here is an example
 
 ```js
 //customComponents_dev.js
@@ -217,9 +123,6 @@ export default Advanced;
 //Import react and react-dom
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-//Import our custom components
-import Advanced from './components/Advanced.js';
 
 //Declaring our customComponents variable which will be set to the window object at the end
 const customComponents = {render: {}}
@@ -234,9 +137,11 @@ customComponents.render.helloWorld = function hellowWorld(settings = { targetDiv
   );
 }
 
-customComponents.render.advanced = function advanced(settings = { targetDiv }) {
+customComponents.render.goodbye = function goodbye(settings = { targetDiv }) {
   ReactDOM.render(
-    <Advanced />,
+    <>
+        <h1>Goodbye from react!</h1>
+    </>,
     document.getElementById(settings.targetDiv)
   );
 }
@@ -244,9 +149,8 @@ customComponents.render.advanced = function advanced(settings = { targetDiv }) {
 //Adding the customComponents object to the browser window object when this file is run
 window.customComponents = customComponents;
 ```
-4. In terminal, run `npm run build` to compile into the browser-friendly file `./public/customComponents.js`.
-5. Modify `index.html`. This time we can call multiple components on-demand
 
+After compiling via `npm run build`, you can now render either or both of these components from `index.html`, like this:
 ```html
 <!DOCTYPE html>
 <html>
@@ -256,16 +160,24 @@ window.customComponents = customComponents;
   </head>
   <body>
     <div id="helloWorld"></div>
+    <div id="goodbye"></div>
     <script>
-      window.customComponents.render.helloWorld({targetDiv: 'helloWorld'});
-    </script>
-    <div id="advanced"></div>
-    <script>
-      window.customComponents.render.advanced({targetDiv: 'advanced'});
+      window.customComponents.render.helloWorld({targetDiv: 'helloWorld'})
+      window.customComponents.render.goodbye({targetDiv: 'goodbye'})
     </script>
   </body>
 </html>
+
 ```
+
+### Advanced components
+Of course, we're going to want to develop much more complex components. You're free to do this just like you would in a normal react app, including:
+* Install and using NPM packages
+* Writing code in separate files and using `import` and `export` statements to re-use code between different files (including your components themselves)
+* Writing JSX code
+
+Various examples are included in `./Examples/example-components`. Each example component has a readme explaining how to set it up, and render it.
+
 ## Deploying compiled code
 * Once `./public/customComponents.js` has been compiled, you're free to serve it somewhere on the web, and import it into existing projects as required.
 * Anywhere that can serve a javascript file will do.
@@ -280,9 +192,6 @@ window.customComponents = customComponents;
 
 ## Globals.js
 In the root directory, you'll see a file called `globals.js`. This (or any other file you want) can be used to store global variables that might be used in all your components. There's nothing special about this file - anything you import into `customComponents_dev.js` will be including in your compiled code.
-
-## Examples
-A few examples of components can be found in the `Examples/example-components` folder.
 
 ## Using the deployed script in a Knack app
 One common use-case is creating a React component to embed into a Knack app, to do more advanced functionality than natively available in Knack.
