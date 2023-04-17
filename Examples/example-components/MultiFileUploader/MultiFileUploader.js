@@ -10,7 +10,7 @@ import ErrorBanner from './components/ErrorBanner.js';
 //Import some helper functions related to API calls
 import { getMemberOptions } from './helpers/apiCalls.js';
 import getMultiChoiceOptionsFromKnackField from './helpers/getMultiChoiceOptionsFromKnackField.js';
-import { uploadFilesThenCreateDocumentRecords } from './helpers/uploadFilesThenCreateDocumentRecords.js';
+import { uploadFilesThenCreateFileUploadRecords } from './helpers/uploadFilesThenCreateFileUploadRecords.js';
 
 //Import MUI theme and styles
 import theme from './theme.js';
@@ -20,7 +20,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import globals from './globals.js';
 
 //Shortcut to global variables
-const knackDocumentObjectFields = globals.Knack.objects.documents.fields;
+const knackFileUploadsObjectFields = globals.Knack.objects.fileUploads.fields;
 
 //Define our editable columns
 //  These will be used to create the table - 1 row per uploaded file.
@@ -113,7 +113,7 @@ const FileUploader = () => {
   const handleSubmit = async () => {
     setIsLoading(true);
     Knack.showSpinner();
-    const results = await uploadFilesThenCreateDocumentRecords(records);
+    const results = await uploadFilesThenCreateFileUploadRecords(records);
     if (results.failed === 0) {
       setSubmitStatus('success');
     } else {
@@ -189,7 +189,7 @@ export default FileUploader;
 
 //Helper function to fetch categories
 async function fetchCategories() {
-  return await getMultiChoiceOptionsFromKnackField(knackDocumentObjectFields.category);
+  return await getMultiChoiceOptionsFromKnackField(knackFileUploadsObjectFields.category);
 }
 
 //Helper function to format a dropdown options as {id: 'string', identifier: 'string'}

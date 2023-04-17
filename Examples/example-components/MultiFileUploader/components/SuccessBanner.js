@@ -4,7 +4,7 @@ import { Button, Alert } from '@mui/material';
 const SuccessBanner = ({ handleReset }) => {
 	return (
 		<>
-			<Alert severity="success">Documents created successfully!!</Alert>
+			<Alert severity="success">File uploads created successfully!!</Alert>
 			<Button onClick={handleReset}>Upload some more</Button>
 		</>
 	)
