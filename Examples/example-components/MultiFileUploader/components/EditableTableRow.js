@@ -13,14 +13,14 @@ const EditableTableRow = ({
 				switch (column.type) {
 
 					case 'readOnly':
-						return <TableCell key={column.key}>{val(rowProps.documentToCreate, column.key)}</TableCell>
+						return <TableCell key={column.key}>{documentToCreate[column.key]}</TableCell>
 
 					case 'select':
 						return <TableCell key={column.key}>
 							<Select
 								displayEmpty
 								disabled={props.isDisabled}
-								value={val(rowProps.documentToCreate, column.key)}
+								value={documentToCreate[column.key]}
 								onChange={(event) => props.handleValueChange(rowProps.rowNum, column.key, event.target.value)}
 							>
 								<MenuItem value="" disabled>
@@ -33,7 +33,7 @@ const EditableTableRow = ({
 								))}
 							</Select>
 						</TableCell>
-						
+
 					case 'text':
 						return (
 							<TableCell key={column.key}>
@@ -41,7 +41,7 @@ const EditableTableRow = ({
 									multiline
 									minRows={1}
 									disabled={props.isDisabled}
-									value={val(rowProps.documentToCreate, column.key)}
+									value={documentToCreate[column.key]}
 									onChange={(event) => props.handleValueChange(rowProps.rowNum, column.key, event.target.value)}
 								/>
 							</TableCell>
@@ -49,7 +49,7 @@ const EditableTableRow = ({
 				}
 			})}
 			<TableCell>
-				<IconButton onClick={() => props.removeDocumentToCreate(rowProps.rowNum)} disabled={props.isDisabled}>
+				<IconButton onClick={() => props.handleRemoveRow(rowProps.rowNum)} disabled={props.isDisabled}>
 					<CloseIcon />
 				</IconButton>
 			</TableCell>
@@ -58,12 +58,3 @@ const EditableTableRow = ({
 };
 
 export default EditableTableRow;
-
-function val(obj, key) {
-    let keys = key.split('.');
-    let value = obj;
-    for (let i = 0; i < keys.length; i++) {
-        value = value[keys[i]];
-    }
-    return value;
-}

@@ -6,7 +6,6 @@ import EditableTableRow from './EditableTableRow.js';
 const EditableTable = ({
   props
 }) => {
-  console.log(props);
   return (
     <Table>
       <TableHead>

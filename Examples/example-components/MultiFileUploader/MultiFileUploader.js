@@ -22,81 +22,67 @@ import globals from '../../../globals.js';
 //Shortcut to global variables
 const knackDocumentObjectFields = globals.Knack.objects.documents.fields;
 
-async function fetchCategories() {
-  return await getMultiChoiceOptionsFromKnackField(knackDocumentObjectFields.category);
-}
-
-async function fetchMembers() {
-  return await getMemberOptions();
-}
-
-//value file.name will receive the uploaded file.name if included
-//newFileName is a special key - it will set the file name to this upon upload (if not blank)
+//Define our editable columns
+//  These will be used to create the table - 1 row per uploaded file.
+//  PARAMETERS
+// - label: is the column header on the page
+// - key: is the key used to refer to the column throughout the component logic. 
+//    -Must be unique
+//    -Must not use the string "file" because that is a reserved key for the actual file uploaded
+// - type: is the type of input to use for the column
+//    Type options:
+//    - readOnly will display non-editable text, defined by the parameter value
+//    - select will display a dropdown menu with the options provided by the dropdownOptions function or array
+//    - text will display a text input
+// - dropdownOptions: is a function or array of options to use for the dropdown menu
+//    -If the column type is select, the dropdownOptions must be provided
+//    -The dropdown options function must return an array of strings or objects {id: string, identifier: string}
+//    -A hard-coded array can be an array of strings or objects {id: string, identifier: string}
+// - value: is the starting value of the column
+//    -You can also pass a special string 'file.name' to prefill the value as the uploaded file name and extension
+// - mandatory: is a boolean that determines whether the column needs a value before submitting uploads
 const columns = [
-  { label: 'File', key: 'fileName', type: 'readOnly', value: 'file.name'},
-  { label: 'New file name', key: 'newFileName', type: 'text' },
-  { label: 'Category', key: 'category', type: 'select', dropdownOptions: fetchCategories },
-  { label: 'Member', key: 'member', type: 'select', dropdownOptions: fetchMembers },
-  { label: 'Description', key: 'description', type: 'text' }
+  { label: 'File', key: 'fileName', type: 'readOnly', value: 'file.name', mandatory: false },
+  { label: 'New file name', key: 'newFileName', type: 'text', mandatory: false },
+  { label: 'Category', key: 'category', type: 'select', dropdownOptions: fetchCategories, mandatory: true },
+  { label: 'Member', key: 'member', type: 'select', dropdownOptions: getMemberOptions, mandatory: true },
+  { label: 'Description', key: 'description', type: 'text', mandatory: false }
 ]
 
 //Define our component
-const FileUploader = () => {  
+const FileUploader = () => {
 
   //Defining state variables
   //Each time a state variable changes, the virtual DOM will re-render
-  const [files, setFiles] = useState([]);
   const [dropdownOptions, setDropdownOptions] = useState({});
   const [documentsToCreate, setDocumentsToCreate] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
-  columns.forEach(column => {
+  //Create a useEffect hook for each column with a dropdown
+  //This will set the dropdown options of each dropdown
+  columns.filter(column => column.type === 'select').forEach(column => {
+    useEffect(() => {
+      configDropdownOptions(column, setDropdownOptions);
+    }, [])
+  });
 
-    //Only needed for column type = select
-    if(column.type !== 'select') return;
+  //When the file input changes, we create a documentToCreate object for each file, with starting values for each column
+  const handleFileInputChange = (event) => {
 
-    //Set up the dropdown options for each <select> column
-    if (Array.isArray(column.dropdownOptions)) {
-
-      useEffect(() => {
-        const optionsFormatted = formatDropdownOptions(column.dropdownOptions);
-        setDropdownOptions((prevDropdownOptions) => ({ ...prevDropdownOptions, [column.key]: optionsFormatted }));
-      }, []);
-
-    } else if (typeof column.dropdownOptions === 'function') {
-
-      useEffect(() => {
-        const fetchOptions = async () => {
-          const options = await column.dropdownOptions();
-          const optionsFormatted = formatDropdownOptions(options);
-          setDropdownOptions((prevDropdownOptions) => ({ ...prevDropdownOptions, [column.key]: optionsFormatted }));
-
-        };
-        fetchOptions();
-      }, []);
-
-    }
-  })
-
-  //When the file input changes, we need to update the files and documentsToCreate variables
-  const updatedocumentsToCreate = (event) => {
-    setFiles(event.target.files);
     setDocumentsToCreate(Array.from(event.target.files).map((file) => {
 
       //We always include the uploaded file under key 'file'
-      let documentToCreate = {file: file};
+      let documentToCreate = { file: file };
 
-      //We need to create a documentToCreate object for each file
-      //Each documentToCreate object needs to have the file value, and empty string for each other column
-      //We use the column key to determine the name of the property
+      //For each column, we need to set the value of the corresponding key
       columns.forEach((column) => {
 
         //Special case: value is file.name, then set it to file name
-        if(column.value === 'file.name'){
+        if (column.value === 'file.name') {
           documentToCreate[column.key] = file.name;
         } else {
-          documentToCreate[column.key] = '';
+          documentToCreate[column.key] = column.value || '';
         }
 
       });
@@ -106,21 +92,10 @@ const FileUploader = () => {
     }));
   };
 
-  //When the user clicks the remove button, we need to update the files and documentsToCreate variables
-  const removeDocumentToCreate = (index) => {
-
-    //Update the files variable - get rid of the file corresponding to the removed row
-    setFiles((prevFiles) => removeNthItemFromArray(Array.from(prevFiles), index));
-
-    //Update the documentsToCreate variable - get rid of the documentsToCreate corresponding to the removed row
+  //When the user clicks the remove button on a row, we need to update the files and documentsToCreate variables
+  const handleRemoveRow = (index) => {
     setDocumentsToCreate((prevDocumentsToCreate) => removeNthItemFromArray(prevDocumentsToCreate, index));
-
   };
-
-  //Helper function to remove an item from an array
-  function removeNthItemFromArray(array, index) {
-    return array.filter((_, i) => i !== index);
-  }
 
   //When a value in the editable table changes, update the documentsToCreate variable with new data
   const handleValueChange = (index, column, value) => {
@@ -146,24 +121,23 @@ const FileUploader = () => {
     }
     setIsLoading(false);
     Knack.hideSpinner();
-    setFiles([]);
+    setDocumentsToCreate([]);
   };
 
   //When the user clicks a button that runs handleReset
   //We reset the values needed to re-render the virtual DOM in it's starting state
   //This means the table and banners are gone, and the file input is visible again
   const handleReset = () => {
-    setFiles([]);
     setDocumentsToCreate([]);
     setSubmitStatus(null);
   };
 
+  //Define the props object that will be passed to the component
   const props = {
     columns,
-    files,
     dropdownOptions,
     documentsToCreate,
-    removeDocumentToCreate,
+    removeDocumentToCreate: handleRemoveRow,
     handleValueChange,
     handleSubmit,
     handleReset,
@@ -171,30 +145,31 @@ const FileUploader = () => {
     submitStatus,
   }
 
-  //Logic to help deciding what to render
-  //This runs each time the virtual DOM is re-rendered
-  //So it controls what shows on the page
-  const allFilesHaveCategory = documentsToCreate.every((documentToCreate) => documentToCreate.category !== '');
-  const showFileInput = files.length === 0 && submitStatus === null;
+  //Some variables to help deciding what to render
+  //These will recalculate every time the component re-renders
+  
+  const allMandatoryFieldsFilled = documentsToCreate.every((documentToCreate) => {
+    const filled = columns.filter(column => column.mandatory).every((column) => {
+      return documentToCreate[column.key] !== '';
+    });
+    return filled;
+  });
+  
+  const showFileInput = documentsToCreate.length === 0 && submitStatus === null;
 
   //The actual component JSX that gets rendered
-  //We are calling a bunch of components defined in separate files, and passing them variables they require
-  //We also run some logic to decide what to render
-  //Eg {showFileInput && <input type="file" multiple onChange={updatedocumentsToCreate}/>}
-  //  Means that the file input will only be rendered if the showFileInput variable is true
-  //We also include <ThemeProvider> for styling, as defined in the theme.js file
   return (
     <ThemeProvider theme={theme}>
       <>
         {showFileInput && (
-          <input type="file" multiple onChange={updatedocumentsToCreate} />
+          <input type="file" multiple onChange={handleFileInputChange} />
         )}
-        {files.length > 0 && (
+        {documentsToCreate.length > 0 && (
           <>
             <EditableTable
               props={props}
             />
-            <SubmitButton isDisabled={!allFilesHaveCategory || isLoading} onClick={handleSubmit} />
+            <SubmitButton isDisabled={!allMandatoryFieldsFilled || isLoading} onClick={handleSubmit} />
           </>
         )}
         {submitStatus === 'success' && (
@@ -211,6 +186,13 @@ const FileUploader = () => {
 //Export out component
 export default FileUploader;
 
+
+//Helper function to fetch categories
+async function fetchCategories() {
+  return await getMultiChoiceOptionsFromKnackField(knackDocumentObjectFields.category);
+}
+
+//Helper function to format a dropdown options as {id: 'string', identifier: 'string'}
 function formatDropdownOptions(options) {
 
   let optionsFormatted;
@@ -230,3 +212,28 @@ function formatDropdownOptions(options) {
   return optionsFormatted;
 
 }
+
+  //Helper function to remove an item from an array
+  //This is used to dynamically create useEffect hooks in the component
+  function removeNthItemFromArray(array, index) {
+    return array.filter((_, i) => i !== index);
+  }
+
+  //Helper function to configure dropdown options
+  function configDropdownOptions(column, setDropdownOptions) {
+
+    if (Array.isArray(column.dropdownOptions)) {
+      const optionsFormatted = formatDropdownOptions(column.dropdownOptions);
+      setDropdownOptions((prevDropdownOptions) => ({ ...prevDropdownOptions, [column.key]: optionsFormatted }));
+  
+    } else if (typeof column.dropdownOptions === 'function') {
+      const fetchOptions = async () => {
+        const options = await column.dropdownOptions();
+        const optionsFormatted = formatDropdownOptions(options);
+        setDropdownOptions((prevDropdownOptions) => ({ ...prevDropdownOptions, [column.key]: optionsFormatted }));
+      };
+      fetchOptions();
+  
+    }
+  
+  }
