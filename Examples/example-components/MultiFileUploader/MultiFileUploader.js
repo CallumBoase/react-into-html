@@ -30,12 +30,13 @@ async function fetchMembers() {
   return await getMemberOptions();
 }
 
-//Not allowed: key file
+//value file.name will receive the uploaded file.name if included
+//newFileName is a special key - it will set the file name to this upon upload (if not blank)
 const columns = [
-  { label: 'File', key: 'fileName', type: 'readOnly', value: 'file.name'},//This will receive val of file state
+  { label: 'File', key: 'fileName', type: 'readOnly', value: 'file.name'},
+  { label: 'New file name', key: 'newFileName', type: 'text' },
   { label: 'Category', key: 'category', type: 'select', dropdownOptions: fetchCategories },
   { label: 'Member', key: 'member', type: 'select', dropdownOptions: fetchMembers },
-  { label: 'New', key: 'new', type: 'select', dropdownOptions: ['123', '234', '345'] },
   { label: 'Description', key: 'description', type: 'text' }
 ]
 
@@ -113,7 +114,6 @@ const FileUploader = () => {
 
     //Update the documentsToCreate variable - get rid of the documentsToCreate corresponding to the removed row
     setDocumentsToCreate((prevDocumentsToCreate) => removeNthItemFromArray(prevDocumentsToCreate, index));
-    console.log(documentsToCreate)
 
   };
 
